@@ -6,7 +6,8 @@ import FuelGauge from "./components/FuelGauge.jsx";
 import Hangar from "./components/Hangar.jsx";
 import MapView from "./components/MapView.jsx";
 import ParentDashboard from "./components/ParentDashboard.jsx";
-import { loadProgress, saveProgress, addSentenceResult, consumeFuelForFlight, completeStory, clearProgress } from "./utils/storage.js";
+import { loadProgress, saveProgress, addSentenceResult, consumeFuelForFlight, completeStory, clearProgress, getFlightDurationSeconds } from "./utils/storage.js";
+import FlightView from "./components/FlightView.jsx";
 
 export default function App() {
   const [progress, setProgress] = useState(() => loadProgress());
@@ -15,6 +16,7 @@ export default function App() {
   const [showParent, setShowParent] = useState(false);
   const [parentHoldTimer, setParentHoldTimer] = useState(null);
   const [toast, setToast] = useState(null);
+  const [joyFlight, setJoyFlight] = useState(null); // { level, duration } when a manual flight is active
 
   const stories = storiesData;
 
@@ -34,13 +36,15 @@ export default function App() {
     setProgress((p) => addSentenceResult(p, { storyId, sentenceIndex, score, grade, fuel }));
   }
 
-  // flight consumption: called from StoryReader after FlightView done
-  // We inject onFlightDone into progress object for StoryReader to call
+  // flight consumption: called from StoryReader after FlightView done (now ring-aware)
   const progressWithFlight = useMemo(() => ({
     ...progress,
-    onFlightDone: () => {
-      setProgress((p) => consumeFuelForFlight(p));
-      setToast("✈️ Flight complete! Fuel used, stars earned!");
+    onFlightDone: (ringsCollected) => {
+      setProgress((p) => consumeFuelForFlight(p, typeof ringsCollected === "number" ? ringsCollected : null));
+      const msg = typeof ringsCollected === "number"
+        ? `✈️ Flight complete! ${ringsCollected} rings → stars!`
+        : "✈️ Flight complete! Fuel used, stars earned!";
+      setToast(msg);
     },
   }), [progress]);
 
@@ -136,8 +140,12 @@ export default function App() {
             <button
               onClick={() => {
                 if (progress.currentFuel >= progress.settings.flightFuelRequired) {
-                  setProgress((p) => consumeFuelForFlight(p));
-                  setToast("✈️ Joy flight! Whee!");
+                  // Joy flight level bumps with harder stories completed
+                  const joyLevel = progress.storiesCompleted.some((id) => {
+                    const s = storiesData.find((x) => x.id === id);
+                    return s && s.level === 3;
+                  }) ? 2 : progress.storiesCompleted.length >= 3 ? 2 : 1;
+                  setJoyFlight({ level: joyLevel, duration: getFlightDurationSeconds(joyLevel) });
                 } else {
                   setToast(`Need ${progress.settings.flightFuelRequired - progress.currentFuel} more fuel to fly`);
                 }
@@ -151,27 +159,47 @@ export default function App() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 py-6">
-        {view === "library" && !activeStory && (
-          <Library stories={stories} progress={progress} onSelect={(s) => { setActiveStory(s); setView("reading"); }} settings={progress.settings} onSettings={handleSettingsUpdate} />
-        )}
+        {joyFlight ? (
+          <div className="max-w-3xl mx-auto">
+            <button onClick={() => setJoyFlight(null)} className="mb-4 text-sky-700 font-bold bg-white px-4 py-2 rounded-full shadow border">← Back</button>
+            <FlightView
+              level={joyFlight.level}
+              durationSeconds={joyFlight.duration}
+              fuelEarned={progress.settings.flightFuelRequired}
+              skin={progress.settings.hangarSkin}
+              onDone={({ ringsCollected }) => {
+                setProgress((p) => consumeFuelForFlight(p, ringsCollected));
+                setToast(`✈️ Joy flight! ${ringsCollected} rings collected!`);
+                setJoyFlight(null);
+              }}
+            />
+            <p className="text-center text-xs text-slate-500 mt-2">Joy flight • Level {joyFlight.level} • {joyFlight.duration}s — keep reading to unlock longer flights!</p>
+          </div>
+        ) : (
+          <>
+            {view === "library" && !activeStory && (
+              <Library stories={stories} progress={progress} onSelect={(s) => { setActiveStory(s); setView("reading"); }} settings={progress.settings} onSettings={handleSettingsUpdate} />
+            )}
 
-        {view === "reading" && activeStory && (
-          <StoryReader
-            story={activeStory}
-            progress={progressWithFlight}
-            settings={progress.settings}
-            onSentenceSuccess={handleSentenceSuccess}
-            onStoryComplete={handleStoryComplete}
-            onExit={() => { setActiveStory(null); setView("library"); }}
-          />
-        )}
+            {view === "reading" && activeStory && (
+              <StoryReader
+                story={activeStory}
+                progress={progressWithFlight}
+                settings={progress.settings}
+                onSentenceSuccess={handleSentenceSuccess}
+                onStoryComplete={handleStoryComplete}
+                onExit={() => { setActiveStory(null); setView("library"); }}
+              />
+            )}
 
-        {view === "hangar" && (
-          <Hangar progress={progress} onSelectSkin={handleSelectSkin} />
-        )}
+            {view === "hangar" && (
+              <Hangar progress={progress} onSelectSkin={handleSelectSkin} />
+            )}
 
-        {view === "map" && (
-          <MapView progress={progress} />
+            {view === "map" && (
+              <MapView progress={progress} />
+            )}
+          </>
         )}
       </main>
 

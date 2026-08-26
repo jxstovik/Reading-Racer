@@ -4,12 +4,12 @@ import { useSpeechRecognition } from "../hooks/useSpeechRecognition.js";
 import { speak, playSuccess, playGood, playTryAgain } from "../utils/sounds.js";
 import MicrophoneButton from "./MicrophoneButton.jsx";
 import FlightView from "./FlightView.jsx";
+import { getFlightDurationSeconds } from "../utils/storage.js";
 
 export default function StoryReader({ story, progress, onSentenceSuccess, onStoryComplete, onExit, settings }) {
   const [idx, setIdx] = useState(0);
   const [feedback, setFeedback] = useState(null); // { grade, fuel, score, wordResults, transcript }
   const [showFlight, setShowFlight] = useState(false);
-  const [lastFlightStars, setLastFlightStars] = useState(5);
   const [attemptCount, setAttemptCount] = useState(0);
 
   const sentence = story.sentences[idx];
@@ -47,7 +47,6 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
       const projected = progress.currentFuel + fuel;
       if (projected >= progress.settings.flightFuelRequired && (idx + 1) % 2 === 0) {
         // fly every 2 sentences if enough fuel, or at story end
-        setLastFlightStars(3 + Math.floor(Math.random() * 6));
         setShowFlight(true);
       }
     }
@@ -72,7 +71,6 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
     if (settings.soundEnabled) playGood();
     const projected = progress.currentFuel + fuel;
     if (projected >= progress.settings.flightFuelRequired) {
-      setLastFlightStars(5);
       setShowFlight(true);
     }
   }
@@ -97,21 +95,22 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
   }
 
   if (showFlight) {
+    const flightDuration = getFlightDurationSeconds(story.level);
     return (
       <div className="max-w-2xl mx-auto p-4">
         <FlightView
+          level={story.level}
+          durationSeconds={flightDuration}
           fuelEarned={progress.settings.flightFuelRequired}
           skin={progress.settings.hangarSkin}
-          stars={lastFlightStars}
-          onDone={() => {
+          onDone={({ ringsCollected }) => {
             setShowFlight(false);
-            // consume fuel is handled in parent via onFlightDone? We do it here via callback prop
-            // Actually parent should handle; we emit event
-            if (progress.onFlightDone) progress.onFlightDone();
+            if (progress.onFlightDone) progress.onFlightDone(ringsCollected);
             // also move to next sentence after flight
             nextSentence();
           }}
         />
+        <p className="text-center text-xs text-slate-500 mt-2">Level {story.level} flight — {flightDuration}s • Steer up/down to collect rings!</p>
       </div>
     );
   }

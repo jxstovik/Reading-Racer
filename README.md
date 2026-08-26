@@ -10,7 +10,7 @@ A warm, encouraging reading game for early readers (4–8). **Read sentences out
 2. **Read** — Tap 🎤 and read aloud (Web Speech API). Interim results shown.
 3. **Check** — Fuzzy match (normalized + Levenshtein/WER, 80% threshold generous). Word-level feedback.
 4. **Reward** — +10 fuel perfect, +7 good, +3 try-again. Near-miss is still positive.
-5. **Fly** — Every ~28 fuel or 2 sentences you can fly. Canvas sky, clouds, stars, plane bob, contrail.
+5. **Fly** — Every ~28 fuel or 2 sentences you can fly. **Interactive flight:** steer up/down (▲▼ buttons, Arrow keys/W+S, or drag/touch) through glowing rings. Min 30s flight, scales with difficulty (L1 30s / L2 40s / L3 50s). Rings collected → stars. No fail state, always encouraging.
 6. **Progress** — Unlock next story, hangar skins, map destinations. All local (LocalStorage).
 
 Fallback: **Parent Tap “Great job!”** always works if mic is unavailable or recognition is poor for child voice.
@@ -45,7 +45,7 @@ src/components/
   Library.jsx          # leveled library (15 stories: 4×L1, 5×L2, 6×L3)
   StoryReader.jsx      # one-sentence view, mic, word tap, feedback
   FuelGauge.jsx        # tank 0..required (28 default)
-  FlightView.jsx       # canvas flight
+  FlightView.jsx       # interactive canvas flight (rings, up/down control, timed 30–50s)
   Hangar.jsx           # skins (classic/rocket/sea/jungle/star)
   MapView.jsx          # 6 destinations by flights flown
   ParentDashboard.jsx  # hold ⚙️ 900ms to open

@@ -69,13 +69,28 @@ export function addSentenceResult(state, { storyId, sentenceIndex, score, grade,
   return next;
 }
 
-export function consumeFuelForFlight(state) {
+export function getFlightDurationSeconds(level = 1) {
+  // Minimum ~30s, scales with difficulty (Level 1 = 30s, Level 2 = 40s, Level 3 = 50s)
+  const lvl = Math.max(1, Math.min(3, Number(level) || 1));
+  return 30 + (lvl - 1) * 10;
+}
+
+export function consumeFuelForFlight(state, ringsCollected = null) {
   const need = state.settings.flightFuelRequired;
   if (state.currentFuel < need) return state;
   const next = structuredClone(state);
   next.currentFuel -= need;
   next.flightsFlown += 1;
-  next.starsCollected += Math.floor(5 + Math.random() * 5);
+  // Rings collected become stars; if not provided (legacy joy flight), random fallback
+  const stars =
+    typeof ringsCollected === "number"
+      ? Math.max(0, Math.floor(ringsCollected))
+      : Math.floor(5 + Math.random() * 5);
+  // Bonus for completing flight: at least 3 stars even if 0 rings (encouragement)
+  next.starsCollected += stars > 0 ? stars : 3;
+  if (typeof ringsCollected === "number") {
+    next.lastFlightRings = ringsCollected;
+  }
   return next;
 }
 
