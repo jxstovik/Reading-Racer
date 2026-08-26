@@ -10,8 +10,8 @@ A warm, encouraging reading game for early readers (4–8). **Read sentences out
 2. **Read** — Tap 🎤 and read aloud (Web Speech API). Interim results shown.
 3. **Check** — Fuzzy match (normalized + Levenshtein/WER, 80% threshold generous). Word-level feedback.
 4. **Reward** — +10 fuel perfect, +7 good, +3 try-again. Near-miss is still positive.
-5. **Fly** — Every ~28 fuel or 2 sentences you can fly. **Interactive flight:** steer up/down (▲▼ buttons, Arrow keys/W+S, or drag/touch) through glowing rings. Min 30s flight, scales with difficulty (L1 30s / L2 40s / L3 50s). Rings collected → stars. No fail state, always encouraging.
-6. **Progress** — Unlock next story, hangar skins, map destinations. All local (LocalStorage).
+5. **Fly** — Every ~28 fuel or 2 sentences you can fly. **Overhead map:** plane flies north at constant speed (faster with better aircraft); steer **left/right** — ◀▶ buttons, A/D or ArrowLeft/Right, or drag on map — to collect rings. **Max 2 rings on screen**, mountains as gentle obstacles, **side edges wrap like Pac-Man**. Min 30s (L1 30s / L2 40s / L3 50s). Rings → stars. Bumps just nudge — no fail.
+6. **Progress** — Unlock next story, better aircraft (Cessna 172 → XB-70, faster tiers), map destinations. All local (LocalStorage).
 
 Fallback: **Parent Tap “Great job!”** always works if mic is unavailable or recognition is poor for child voice.
 
@@ -119,25 +119,27 @@ Works offline for progress (LocalStorage), but fresh load still prefers network 
 - Web Speech Synthesis for “Hear it” TTS
 - Web Audio for success/flight sounds
 - LocalStorage for progress (no backend, COPPA-friendly, offline-capable)
-- Canvas flight animation (no heavy game engine)
+- Canvas overhead flight (top-down, Pac-Man wrap, 2-ring limit, mountains)
 
 ## Project Structure
 
 ```
 public/stories/stories.json
+public/manifest.webmanifest
 src/components/
   Library.jsx          # leveled library (15 stories: 4×L1, 5×L2, 6×L3)
   StoryReader.jsx      # one-sentence view, mic, word tap, feedback
   FuelGauge.jsx        # tank 0..required (28 default)
-  FlightView.jsx       # interactive canvas flight (rings, up/down control, timed 30–50s)
-  Hangar.jsx           # skins (classic/rocket/sea/jungle/star)
+  FlightView.jsx       # overhead canvas: forward speed, left/right turn, 2 rings, mountains, Pac-Man wrap (560×720), top-down fleet
+  Hangar.jsx           # 6 aircraft tiers Cessna 172 → XB-70 (speed 125→320 kts, unlock 0/2/4/6/9/12 stories)
   MapView.jsx          # 6 destinations by flights flown
   ParentDashboard.jsx  # hold ⚙️ 900ms to open
   MicrophoneButton.jsx
 src/hooks/useSpeechRecognition.js
 src/utils/
+  aircraft.js          # AIRCRAFT defs + drawTopDownAircraft (C172/B737/F-16/F-22/SR-71/XB-70)
   speechMatch.js       # normalize, levenshtein, WER, scoreReading, gradeFromScore
-  storage.js           # load/save, addSentenceResult, consumeFuel, completeStory
+  storage.js           # load/save, addSentenceResult, consumeFuel, completeStory (+ aircraft unlock + getFlightDurationSeconds)
   sounds.js            # Web Audio tones + speechSynthesis
 ```
 
@@ -180,7 +182,8 @@ No account, no cloud storage of voice.
 - Warm copy: “Amazing! +10 fuel!” never “Incorrect”
 - Word tap 🔊 for help, “Hear it” whole sentence
 - No timers, unlimited retries, always forward progress
-- 5 max flights hint in footer, no pressure
+- Overhead flight: ◀▶ big buttons + drag + A/D/Arrows; Pac-Man wrap hint shown; 2 rings at a time so not overwhelming; mountains are gentle bumps, never crash
+- Fleet motivation: faster planes feel rewarding but still controllable (125→320 kts)
 
 ## Build Phases (per plan)
 
