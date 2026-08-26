@@ -1,0 +1,17 @@
+{
+  "name": "Reading Racer — Fuel Your Airplane By Reading",
+  "short_name": "Reading Racer",
+  "description": "Read sentences aloud, earn fuel, and fly your airplane through rings!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e0f2fe",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

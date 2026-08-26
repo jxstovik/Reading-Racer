@@ -5,10 +5,11 @@
   "description": "Fuel Your Airplane By Reading — a reading game for early readers (4-8)" ,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview --host",
+    "serve": "vite preview --host --port 4173"
   },
   "dependencies": {
     "react": "^19.2.8",
