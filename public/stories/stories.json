@@ -1,0 +1,228 @@
+[
+  {
+    "id": "sam-first-flight",
+    "level": 1,
+    "title": "Sam's First Flight",
+    "coverEmoji": "✈️",
+    "color": "from-sky-400 to-blue-600",
+    "sentences": [
+      "Sam has a small red plane.",
+      "The plane needs fuel to fly.",
+      "Sam reads to fill the tank.",
+      "Now Sam can soar high!"
+    ],
+    "vocabulary": ["Sam", "plane", "fuel", "fly", "soar"]
+  },
+  {
+    "id": "cat-can-fly",
+    "level": 1,
+    "title": "The Cat Can Fly",
+    "coverEmoji": "🐱",
+    "color": "from-orange-300 to-rose-500",
+    "sentences": [
+      "The cat can fly.",
+      "The cat has a cape.",
+      "The cat is so brave.",
+      "We love the cat!"
+    ],
+    "vocabulary": ["cat", "fly", "cape", "brave"]
+  },
+  {
+    "id": "sun-and-moon",
+    "level": 1,
+    "title": "Sun and Moon",
+    "coverEmoji": "🌙",
+    "color": "from-indigo-400 to-purple-600",
+    "sentences": [
+      "The sun is big.",
+      "The moon is small.",
+      "The sun can not fly.",
+      "The plane can fly high."
+    ],
+    "vocabulary": ["sun", "moon", "big", "small"]
+  },
+  {
+    "id": "big-blue-sky",
+    "level": 1,
+    "title": "Big Blue Sky",
+    "coverEmoji": "☁️",
+    "color": "from-cyan-300 to-sky-600",
+    "sentences": [
+      "I see the sky.",
+      "The sky is blue.",
+      "A bird is in the sky.",
+      "The plane is in the sky too."
+    ],
+    "vocabulary": ["sky", "blue", "bird", "plane"]
+  },
+  {
+    "id": "little-pilot",
+    "level": 2,
+    "title": "The Little Pilot",
+    "coverEmoji": "🧑‍✈️",
+    "color": "from-amber-400 to-orange-600",
+    "sentences": [
+      "Mia wants to be a pilot.",
+      "She checks the map for adventure.",
+      "The little plane needs more fuel.",
+      "Mia reads a story out loud.",
+      "Now the plane can cross the sea!"
+    ],
+    "vocabulary": ["pilot", "map", "adventure", "fuel", "sea"]
+  },
+  {
+    "id": "cloud-island",
+    "level": 2,
+    "title": "Cloud Island",
+    "coverEmoji": "🏝️",
+    "color": "from-teal-400 to-emerald-600",
+    "sentences": [
+      "There is an island in the clouds.",
+      "The island has a big tree.",
+      "A small bird lives in the tree.",
+      "The plane brings a letter to the bird.",
+      "The bird is so happy to read it!"
+    ],
+    "vocabulary": ["island", "clouds", "tree", "bird", "letter"]
+  },
+  {
+    "id": "star-journey",
+    "level": 2,
+    "title": "Star Journey",
+    "coverEmoji": "⭐",
+    "color": "from-violet-400 to-indigo-600",
+    "sentences": [
+      "The night sky is full of stars.",
+      "The plane flies past the moon.",
+      "Captain Leo counts the bright stars.",
+      "He writes the number in his log.",
+      "Tomorrow he will fly even farther."
+    ],
+    "vocabulary": ["night", "stars", "moon", "Captain", "farther"]
+  },
+  {
+    "id": "rainy-rescue",
+    "level": 2,
+    "title": "The Rainy Rescue",
+    "coverEmoji": "🌧️",
+    "color": "from-slate-400 to-blue-700",
+    "sentences": [
+      "It was a rainy day on the hill.",
+      "A lost puppy waited by the barn.",
+      "The pilot heard a soft bark.",
+      "She landed her plane in the soft grass.",
+      "The puppy jumped in and smiled."
+    ],
+    "vocabulary": ["rainy", "puppy", "barn", "landed", "grass"]
+  },
+  {
+    "id": "jungle-airstrip",
+    "level": 3,
+    "title": "The Jungle Airstrip",
+    "coverEmoji": "🌴",
+    "color": "from-green-500 to-emerald-800",
+    "sentences": [
+      "Deep in the jungle there is a hidden airstrip.",
+      "Explorer Ana needs to deliver medicine.",
+      "The runway is short and covered with leaves.",
+      "Ana reads the wind meter very carefully.",
+      "Her careful reading helps her land safely.",
+      "The village cheers when the plane stops."
+    ],
+    "vocabulary": ["jungle", "hidden", "airstrip", "medicine", "village"]
+  },
+  {
+    "id": "desert-race",
+    "level": 3,
+    "title": "The Desert Race",
+    "coverEmoji": "🏜️",
+    "color": "from-yellow-500 to-red-600",
+    "sentences": [
+      "Two planes race across the desert at sunrise.",
+      "The red plane is fast but the blue plane is steady.",
+      "A sudden wind pushes both planes sideways.",
+      "The pilots remember to stay calm and focused.",
+      "They finish together and laugh about the adventure.",
+      "Reading the wind made them better pilots."
+    ],
+    "vocabulary": ["desert", "sunrise", "steady", "sudden", "focused"]
+  },
+  {
+    "id": "arctic-delivery",
+    "level": 3,
+    "title": "Arctic Delivery",
+    "coverEmoji": "❄️",
+    "color": "from-blue-200 to-indigo-800",
+    "sentences": [
+      "Captain Noor flies over the frozen arctic sea.",
+      "She carries warm blankets for the research station.",
+      "Snow clouds make it hard to see ahead.",
+      "Noor reads her compass and stays on course.",
+      "The station lights appear through the falling snow.",
+      "Everyone is grateful for her brave flight."
+    ],
+    "vocabulary": ["arctic", "frozen", "blankets", "compass", "grateful"]
+  },
+  {
+    "id": "city-lights",
+    "level": 2,
+    "title": "City Lights",
+    "coverEmoji": "🌃",
+    "color": "from-fuchsia-500 to-purple-800",
+    "sentences": [
+      "The city has many bright lights.",
+      "The plane flies over the tall towers.",
+      "Cars look like tiny ants below.",
+      "The pilot waves to the people down there.",
+      "At night the city looks like stars on earth."
+    ],
+    "vocabulary": ["city", "towers", "pilot", "bright"]
+  },
+  {
+    "id": "ocean-rescue-2",
+    "level": 3,
+    "title": "Ocean Rescue",
+    "coverEmoji": "🌊",
+    "color": "from-cyan-500 to-blue-800",
+    "sentences": [
+      "A sailboat is stuck in the middle of the ocean.",
+      "The wind has torn its big white sail.",
+      "Pilot Jon hears the call for help on his radio.",
+      "He drops a new rope down to the boat.",
+      "The sailors pull the rope and feel hope again.",
+      "Teamwork and quick reading saved the day."
+    ],
+    "vocabulary": ["ocean", "sailboat", "torn", "radio", "teamwork"]
+  },
+  {
+    "id": "mountain-quest",
+    "level": 3,
+    "title": "Mountain Quest",
+    "coverEmoji": "🏔️",
+    "color": "from-stone-400 to-slate-700",
+    "sentences": [
+      "High on the mountain lives an old inventor.",
+      "She built a glider that has no engine.",
+      "The glider needs a strong wind to take off.",
+      "The young pilot reads the mountain wind chart.",
+      "When the wind is right she jumps into the sky.",
+      "She soars like an eagle over the peaks."
+    ],
+    "vocabulary": ["mountain", "inventor", "glider", "chart", "soars"]
+  },
+  {
+    "id": "space-dream",
+    "level": 2,
+    "title": "Space Dream",
+    "coverEmoji": "🚀",
+    "color": "from-purple-600 to-slate-900",
+    "sentences": [
+      "Ben dreams of flying to space.",
+      "His paper plane can not go that high.",
+      "He reads books about rockets every night.",
+      "One day he will build his own rocket.",
+      "For now he flies his plane with joy."
+    ],
+    "vocabulary": ["dreams", "space", "rockets", "build"]
+  }
+]
