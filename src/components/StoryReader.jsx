@@ -6,6 +6,14 @@ import MicrophoneButton from "./MicrophoneButton.jsx";
 import FlightView from "./FlightView.jsx";
 import { getFlightDurationSeconds } from "../utils/storage.js";
 
+function sentencesPerPage(level) {
+  if (level === 0) return 1;
+  if (level === 1) return 2;
+  if (level === 2) return 3;
+  if (level === 3) return 5;
+  return 1;
+}
+
 export default function StoryReader({ story, progress, onSentenceSuccess, onStoryComplete, onExit, settings }) {
   const [idx, setIdx] = useState(0);
   const [feedback, setFeedback] = useState(null); // { grade, fuel, score, wordResults, transcript }
@@ -14,6 +22,14 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
 
   const sentence = story.sentences[idx];
   const isLast = idx === story.sentences.length - 1;
+
+  const spp = sentencesPerPage(story.level);
+  const totalPages = Math.ceil(story.sentences.length / spp);
+  const currentPage = Math.floor(idx / spp); // 0-indexed
+  const pageStart = currentPage * spp;
+  const pageEnd = Math.min(story.sentences.length, pageStart + spp);
+  const pageSentences = story.sentences.slice(pageStart, pageEnd);
+  const sentenceOffset = idx - pageStart; // which sentence in current page is active
 
   const { isListening, transcript, interimTranscript, error, isSupported, start, stop, reset } = useSpeechRecognition();
 
@@ -94,6 +110,12 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
     speak(sentence, settings.soundEnabled);
   }
 
+  function absoluteNextIsNewPage() {
+    if (isLast) return false;
+    const next = idx + 1;
+    return Math.floor(next / spp) !== currentPage;
+  }
+
   if (showFlight) {
     const flightDuration = getFlightDurationSeconds(story.level);
     return (
@@ -110,7 +132,7 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
             nextSentence();
           }}
         />
-        <p className="text-center text-xs text-slate-500 mt-2">Level {story.level} flight — {flightDuration}s • Steer up/down to collect rings!</p>
+        <p className="text-center text-xs text-slate-500 mt-2">Level {story.level} flight — {flightDuration}s • Steer to collect rings!</p>
       </div>
     );
   }
@@ -123,7 +145,7 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
       <div className="flex items-center justify-between mb-4">
         <button onClick={onExit} className="text-sky-700 font-bold bg-white px-4 py-2 rounded-full shadow border">← Library</button>
         <span className="text-sm font-bold text-slate-600 bg-white px-3 py-1 rounded-full shadow">
-          {idx + 1} / {story.sentences.length}
+          Page {currentPage + 1} / {totalPages} • {idx + 1} / {story.sentences.length}
         </span>
       </div>
 
@@ -132,25 +154,63 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
         <div className="absolute -top-6 -right-6 text-[80px] opacity-20 rotate-12">{story.coverEmoji}</div>
         <div className="text-6xl mb-2" style={{ animation: "float 3s ease-in-out infinite" }}>{story.coverEmoji}</div>
         <h2 className="text-2xl font-black drop-shadow">{story.title}</h2>
-        <p className="text-white/80 text-sm mt-1">Level {story.level} • {story.sentences.length} sentences</p>
+        <p className="text-white/80 text-sm mt-1">Level {story.level} • {story.sentences.length} sentences • {spp} per page • {totalPages} pages</p>
         <div className="mt-3 h-2 bg-white/30 rounded-full overflow-hidden">
           <div className="h-full bg-white rounded-full transition-all" style={{ width: `${((idx) / story.sentences.length) * 100}%` }} />
         </div>
+        {/* page dots */}
+        <div className="flex justify-center gap-1.5 mt-3">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <div key={i} className={`h-2 rounded-full transition-all ${i === currentPage ? "w-8 bg-white" : i < currentPage ? "w-2 bg-white/80" : "w-2 bg-white/35"}`} />
+          ))}
+        </div>
       </div>
 
-      {/* sentence card */}
+      {/* page card - shows all sentences on current page, active sentence highlighted */}
       <div
-        className={`mt-6 bg-white rounded-3xl p-8 shadow-xl border-4 text-center ${settings.dyslexiaFont ? "tracking-widest leading-relaxed" : ""}`}
+        className={`mt-6 bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 text-center ${settings.dyslexiaFont ? "tracking-widest leading-relaxed" : ""}`}
         style={settings.dyslexiaFont ? { fontFamily: "Comic Sans MS, Chalkboard, sans-serif", letterSpacing: "0.04em" } : {}}
       >
-        <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 text-[28px] sm:text-[32px] font-black leading-tight">
-          {words.map((w, i) => {
-            let cls = "text-slate-800";
-            if (feedback?.wordResults) {
-              const wr = feedback.wordResults[i];
-              if (wr) cls = wr.status === "correct" ? "text-emerald-600 bg-emerald-50 rounded px-1" : "text-rose-500 bg-rose-50 rounded px-1 line-through decoration-2";
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="text-xs font-black tracking-widest text-slate-500 bg-slate-100 px-3 py-1 rounded-full">PAGE {currentPage + 1} OF {totalPages}</span>
+          <span className="text-xs font-bold text-sky-600 bg-sky-50 px-2 py-1 rounded-full border border-sky-200">{spp} sentence{spp>1?"s":""} on this page</span>
+        </div>
+
+        <div className="space-y-4">
+          {pageSentences.map((s, pIdx) => {
+            const absoluteIdx = pageStart + pIdx;
+            const isActive = pIdx === sentenceOffset;
+            const isPast = absoluteIdx < idx;
+            const isFuture = absoluteIdx > idx;
+            // sizing: level 0 large, level 3 slightly smaller to fit 5 per page
+            const sizeClass = story.level === 3 ? "text-[20px] sm:text-[24px]" : story.level === 2 ? "text-[22px] sm:text-[26px]" : "text-[24px] sm:text-[28px]";
+            if (isActive) {
+              return (
+                <div key={pIdx} className={`rounded-2xl border-2 p-3 ${feedback ? "border-slate-200 bg-slate-50/50" : "border-sky-300 bg-sky-50/70 shadow-inner"}`}>
+                  <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1 ${sizeClass} font-black leading-tight`}>
+                    {words.map((w, i) => {
+                      let cls = "text-slate-800";
+                      if (feedback?.wordResults) {
+                        const wr = feedback.wordResults[i];
+                        if (wr) cls = wr.status === "correct" ? "text-emerald-600 bg-emerald-50 rounded px-1" : "text-rose-500 bg-rose-50 rounded px-1 line-through decoration-2";
+                      }
+                      return <span key={i} className={cls}>{w}</span>;
+                    })}
+                  </div>
+                  {isFuture === false && isPast === false && <p className="text-[11px] font-bold text-sky-600 mt-1">← Read this one out loud</p>}
+                </div>
+              );
             }
-            return <span key={i} className={cls}>{w}</span>;
+            // past/future sentences on same page - show dimmed, with check for past
+            return (
+              <div key={pIdx} className={`rounded-2xl border p-2.5 ${isPast ? "bg-emerald-50 border-emerald-200 opacity-90" : "bg-slate-50 border-slate-200 opacity-60"}`}>
+                <div className={`flex flex-wrap justify-center gap-x-1.5 gap-y-1 ${story.level === 3 ? "text-[16px] sm:text-[18px]" : "text-[18px] sm:text-[20px]"} font-bold leading-tight ${isPast ? "text-emerald-700" : "text-slate-600"}`}>
+                  {s.split(" ").map((w,i) => <span key={i}>{w}</span>)}
+                </div>
+                {isPast && <p className="text-[10px] font-black text-emerald-600 mt-1">✓ Done</p>}
+                {isFuture && <p className="text-[10px] font-semibold text-slate-400 mt-1">up next</p>}
+              </div>
+            );
           })}
         </div>
 
@@ -211,7 +271,7 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
             <div className="mt-4 flex gap-3 justify-center flex-wrap">
               {(feedback.grade === "perfect" || feedback.grade === "good" || feedback.grade === "try-again") && (
                 <button onClick={nextSentence} className="bg-emerald-500 hover:bg-emerald-400 text-white font-black px-8 py-3 rounded-full shadow-lg text-lg">
-                  {isLast ? "Finish Story 🎉" : "Next →"}
+                  {isLast ? "Finish Story 🎉" : absoluteNextIsNewPage() ? "Next Page →" : "Next →"}
                 </button>
               )}
               {feedback.grade === "needs-help" && (
@@ -232,7 +292,7 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
               )}
             </div>
 
-            {/* word tap help */}
+            {/* word tap help - only active sentence */}
             <div className="mt-4 flex flex-wrap justify-center gap-1 text-xs">
               {words.map((w, i) => (
                 <button
@@ -249,7 +309,7 @@ export default function StoryReader({ story, progress, onSentenceSuccess, onStor
         )}
       </div>
 
-      <p className="text-center text-[11px] text-slate-400 mt-4">Tip: Be encouraging — any attempt earns fuel. No timers, no penalties.</p>
+      <p className="text-center text-[11px] text-slate-400 mt-4">Tip: Be encouraging — any attempt earns fuel. No timers, no penalties. Page {currentPage+1}/{totalPages} • {spp} sentence{spp>1?"s":""} per page.</p>
     </div>
   );
 }

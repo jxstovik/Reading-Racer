@@ -122,7 +122,10 @@
       "Mat sat.",
       "Sam and Mat sat.",
       "Pat sat on Mat.",
-      "Pat sat on Sam."
+      "Pat sat on Sam.",
+      "Sam sat with Pat.",
+      "Mat sat with Pat.",
+      "All sat and sat."
     ],
     "vocabulary": ["Sam", "Mat", "sat", "Pat", "on"]
   },
@@ -137,7 +140,10 @@
       "Dot can run.",
       "Dot ran to Sam.",
       "Sam ran with Dot.",
-      "Dot and Sam ran."
+      "Dot and Sam ran.",
+      "Dot and Sam had fun.",
+      "Dot ran up the hill.",
+      "Sam ran up with Dot."
     ],
     "vocabulary": ["Dot", "ran", "dog", "Sam", "with"]
   },
@@ -152,7 +158,10 @@
       "Wag is a dog.",
       "Mac sat on a mat.",
       "Wag sat on a rug.",
-      "Mac and Wag sat."
+      "Mac and Wag sat.",
+      "Mac ran to the mat.",
+      "Wag ran to the rug.",
+      "Mac and Wag nap on the rug."
     ],
     "vocabulary": ["Mac", "Wag", "cat", "mat", "rug"]
   },
@@ -167,7 +176,10 @@
       "The hen can peck.",
       "The hen has a nest.",
       "The nest is in the pen.",
-      "The red hen sat on the nest."
+      "The red hen sat on the nest.",
+      "The hen will nap in the nest.",
+      "The pen is for the hen.",
+      "The red hen is glad."
     ],
     "vocabulary": ["hen", "red", "nest", "pen", "peck"]
   },
@@ -182,7 +194,10 @@
       "Nan has a pan.",
       "Dan can fan Nan.",
       "Nan can fan Dan.",
-      "Dan and Nan fan."
+      "Dan and Nan fan.",
+      "Dan and Nan had fun.",
+      "Nan got the fan and pan.",
+      "Dan met Nan with the fan."
     ],
     "vocabulary": ["Dan", "Nan", "fan", "pan", "can"]
   },
@@ -197,7 +212,10 @@
       "The pot has ham.",
       "Dot got the pot.",
       "The ham is in the pot.",
-      "Dot and Sam have ham."
+      "Dot and Sam have ham.",
+      "Sam has ham and pot.",
+      "The ham is hot and good.",
+      "Dot had ham in the hot pot."
     ],
     "vocabulary": ["hot", "pot", "ham", "Dot", "Sam"]
   },
@@ -212,7 +230,10 @@
       "The hen is in the pen.",
       "Ben fed the hen.",
       "The hen ate and ate.",
-      "Ben and the hen nap."
+      "Ben and the hen nap.",
+      "The hen will nap with Ben.",
+      "Ben is glad the hen ate.",
+      "The pen is big for Ben and hen."
     ],
     "vocabulary": ["Ben", "hen", "pen", "fed", "nap"]
   },
@@ -227,7 +248,10 @@
       "The pig has a wig.",
       "The pig sat in mud.",
       "The mud is on the wig.",
-      "The big pig is fun."
+      "The big pig is fun.",
+      "The pig had fun in mud.",
+      "The wig is wet with mud.",
+      "The pig will nap in the mud."
     ],
     "vocabulary": ["pig", "big", "wig", "mud", "fun"]
   },
@@ -242,7 +266,10 @@
       "A mop is on the box.",
       "Sam got the top.",
       "Sam got the mop on top.",
-      "The top and mop on the box."
+      "The top and mop on the box.",
+      "The box is for the top and mop.",
+      "Sam put the top in the box.",
+      "Sam put the mop on the box."
     ],
     "vocabulary": ["box", "top", "mop", "on", "got"]
   },
@@ -257,7 +284,10 @@
       "We can run in the sun.",
       "We have fun in the sun.",
       "The sun is hot but fun.",
-      "Run, run, fun in the sun!"
+      "Run, run, fun in the sun!",
+      "We run and run with fun.",
+      "The sun will set soon.",
+      "We had fun, fun, fun!"
     ],
     "vocabulary": ["sun", "fun", "run", "hot", "up"]
   },
@@ -272,7 +302,10 @@
       "The pup is in the mud.",
       "Mum said no to mud.",
       "The pup ran from the mud.",
-      "Mum and pup hug."
+      "Mum and pup hug.",
+      "Mum and pup had fun.",
+      "The mud is on pup and Mum.",
+      "Pup and Mum hop from mud."
     ],
     "vocabulary": ["pup", "mud", "dug", "Mum", "hug"]
   },
@@ -287,7 +320,10 @@
       "Jim will mix ham and jam.",
       "Jim will fix a ham jam mix.",
       "Jim and Kim eat the mix.",
-      "Yum, the mix is good!"
+      "Yum, the mix is good!",
+      "Kim can fix the mix.",
+      "The mix is ham and jam.",
+      "Jim and Kim like ham jam mix."
     ],
     "vocabulary": ["Jim", "mix", "ham", "jam", "Kim"]
   },
@@ -301,7 +337,11 @@
       "Sam has a small red plane.",
       "The plane needs fuel to fly.",
       "Sam reads to fill the tank.",
-      "Now Sam can soar high!"
+      "Now Sam can soar high!",
+      "Sam checks the small tank.",
+      "The tank is now full of fuel.",
+      "Sam lifts off into the blue sky.",
+      "Sam waves as he flies high."
     ],
     "vocabulary": ["Sam", "plane", "fuel", "fly", "soar"]
   },
@@ -315,7 +355,11 @@
       "The cat can fly.",
       "The cat has a cape.",
       "The cat is so brave.",
-      "We love the cat!"
+      "We love the cat!",
+      "The cat wears a red cape.",
+      "The cape helps the cat fly high.",
+      "The cat flies past the sky.",
+      "All cheer for the brave cat."
     ],
     "vocabulary": ["cat", "fly", "cape", "brave"]
   },
@@ -329,7 +373,11 @@
       "The sun is big.",
       "The moon is small.",
       "The sun can not fly.",
-      "The plane can fly high."
+      "The plane can fly high.",
+      "The plane waves at the sun.",
+      "The moon waves at the plane.",
+      "Sun and moon both shine.",
+      "The plane loves sun and moon."
     ],
     "vocabulary": ["sun", "moon", "big", "small"]
   },
@@ -343,7 +391,11 @@
       "I see the sky.",
       "The sky is blue.",
       "A bird is in the sky.",
-      "The plane is in the sky too."
+      "The plane is in the sky too.",
+      "The bird loves the blue sky.",
+      "The plane loves the blue sky.",
+      "I love the sky too.",
+      "We all love the big blue sky."
     ],
     "vocabulary": ["sky", "blue", "bird", "plane"]
   },
@@ -358,7 +410,14 @@
       "She checks the map for adventure.",
       "The little plane needs more fuel.",
       "Mia reads a story out loud.",
-      "Now the plane can cross the sea!"
+      "Now the plane can cross the sea!",
+      "Mia checks the fuel meter on the dash.",
+      "The meter shows the plane still needs fuel.",
+      "Mia reads the checklist very fast.",
+      "The checklist says to read one more page.",
+      "Mia reads loud and clear for the plane.",
+      "The engine starts to hum with joy.",
+      "Mia smiles as the plane is ready to go."
     ],
     "vocabulary": ["pilot", "map", "adventure", "fuel", "sea"]
   },
@@ -373,7 +432,14 @@
       "The island has a big tree.",
       "A small bird lives in the tree.",
       "The plane brings a letter to the bird.",
-      "The bird is so happy to read it!"
+      "The bird is so happy to read it!",
+      "The clouds are soft and white like cotton.",
+      "The bird sings a sweet song from the tree.",
+      "The letter says hello from far away.",
+      "The bird reads the letter with a smile.",
+      "The plane rests on the island grass.",
+      "The sun shines bright on the cloud island.",
+      "The bird waves as the plane flies home."
     ],
     "vocabulary": ["island", "clouds", "tree", "bird", "letter"]
   },
@@ -388,7 +454,14 @@
       "The plane flies past the moon.",
       "Captain Leo counts the bright stars.",
       "He writes the number in his log.",
-      "Tomorrow he will fly even farther."
+      "Tomorrow he will fly even farther.",
+      "Leo opens his log book to write.",
+      "The stars twinkle like tiny lights.",
+      "Leo draws a map of the stars he saw.",
+      "The moon glows and guides the plane.",
+      "Leo feels proud of his bright journey.",
+      "The plane turns toward home with joy.",
+      "Leo will share the star map with friends."
     ],
     "vocabulary": ["night", "stars", "moon", "Captain", "farther"]
   },
@@ -403,9 +476,60 @@
       "A lost puppy waited by the barn.",
       "The pilot heard a soft bark.",
       "She landed her plane in the soft grass.",
-      "The puppy jumped in and smiled."
+      "The puppy jumped in and smiled.",
+      "The rain falls soft on the green hill.",
+      "The puppy shivers near the red barn.",
+      "The pilot waves from her small plane.",
+      "The grass is wet but soft for landing.",
+      "The puppy barks a happy bark of thanks.",
+      "The pilot dries the puppy with a warm cloth.",
+      "They fly home together through the light rain."
     ],
     "vocabulary": ["rainy", "puppy", "barn", "landed", "grass"]
+  },
+  {
+    "id": "city-lights",
+    "level": 2,
+    "title": "City Lights",
+    "coverEmoji": "🌃",
+    "color": "from-fuchsia-500 to-purple-800",
+    "sentences": [
+      "The city has many bright lights.",
+      "The plane flies over the tall towers.",
+      "Cars look like tiny ants below.",
+      "The pilot waves to the people down there.",
+      "At night the city looks like stars on earth.",
+      "The towers are tall and shine at night.",
+      "The lights blink red, blue, and yellow.",
+      "The pilot looks down at the busy streets.",
+      "People wave their lights at the plane.",
+      "The plane glides quiet over the city glow.",
+      "The city night is calm and bright.",
+      "The pilot loves the city light show."
+    ],
+    "vocabulary": ["city", "towers", "pilot", "bright"]
+  },
+  {
+    "id": "space-dream",
+    "level": 2,
+    "title": "Space Dream",
+    "coverEmoji": "🚀",
+    "color": "from-purple-600 to-slate-900",
+    "sentences": [
+      "Ben dreams of flying to space.",
+      "His paper plane can not go that high.",
+      "He reads books about rockets every night.",
+      "One day he will build his own rocket.",
+      "For now he flies his plane with joy.",
+      "Ben draws a red rocket in his book.",
+      "The rocket has fins and a bright nose.",
+      "Ben reads how rockets lift off the ground.",
+      "He learns that rockets need fuel to soar.",
+      "Ben saves stars for his future rocket fuel.",
+      "His mom reads the rocket book with him.",
+      "Ben falls asleep and dreams of bright stars."
+    ],
+    "vocabulary": ["dreams", "space", "rockets", "build"]
   },
   {
     "id": "jungle-airstrip",
@@ -419,7 +543,21 @@
       "The runway is short and covered with leaves.",
       "Ana reads the wind meter very carefully.",
       "Her careful reading helps her land safely.",
-      "The village cheers when the plane stops."
+      "The village cheers when the plane stops.",
+      "Ana checks her watch as the sun gets low.",
+      "The jungle birds call loud from the trees.",
+      "Ana clears leaves from the short runway.",
+      "She tests the plane flaps and brakes with care.",
+      "The wind meter spins fast in the warm air.",
+      "Ana waits for the wind to calm a bit.",
+      "She reads the meter again and nods with focus.",
+      "The runway feels steady under the plane wheels.",
+      "Ana lifts off slow between tall green trees.",
+      "The medicine box is safe behind her seat.",
+      "She flies low over the bright river below.",
+      "The village fires light the small landing field.",
+      "Children run to cheer as Ana lands smooth.",
+      "Ana hands the medicine to the kind elder."
     ],
     "vocabulary": ["jungle", "hidden", "airstrip", "medicine", "village"]
   },
@@ -435,7 +573,21 @@
       "A sudden wind pushes both planes sideways.",
       "The pilots remember to stay calm and focused.",
       "They finish together and laugh about the adventure.",
-      "Reading the wind made them better pilots."
+      "Reading the wind made them better pilots.",
+      "The sky turns pink as the race begins.",
+      "Both pilots check their fuel and maps with care.",
+      "The desert wind is hot and swirls sand high.",
+      "The red plane tilts but holds steady well.",
+      "The blue plane hums calm through the sand cloud.",
+      "The pilots talk on the radio to stay near.",
+      "A dust cloud hides the finish line from view.",
+      "They read the wind meter through the haze.",
+      "The meter shows the wind will soon fade slow.",
+      "Both planes push steady toward the last dune.",
+      "The crowd waves flags bright in the sunrise glow.",
+      "The planes cross the line side by side with pride.",
+      "The pilots shake hands and smile with joy.",
+      "They learn that calm focus wins the true race."
     ],
     "vocabulary": ["desert", "sunrise", "steady", "sudden", "focused"]
   },
@@ -451,24 +603,23 @@
       "Snow clouds make it hard to see ahead.",
       "Noor reads her compass and stays on course.",
       "The station lights appear through the falling snow.",
-      "Everyone is grateful for her brave flight."
+      "Everyone is grateful for her brave flight.",
+      "The arctic wind howls cold across the white sea.",
+      "Noor checks her heater and warm coat with care.",
+      "The blankets are packed tight in the small hold.",
+      "Snow blows fast and makes the sky seem gray.",
+      "Noor watches her map and compass every mile.",
+      "The research lights blink faint through the snow veil.",
+      "She reads the radio call from the cold station team.",
+      "They say the wind is strong near the landing pad.",
+      "Noor steadies the plane against the snow gust.",
+      "Her compass spins but she holds her course true.",
+      "The station roof glows red through the soft white fall.",
+      "Noor lands smooth on the short snow runway.",
+      "Friends rush to bring the warm blankets inside fast.",
+      "They thank Noor with hot tea and bright smiles."
     ],
     "vocabulary": ["arctic", "frozen", "blankets", "compass", "grateful"]
-  },
-  {
-    "id": "city-lights",
-    "level": 2,
-    "title": "City Lights",
-    "coverEmoji": "🌃",
-    "color": "from-fuchsia-500 to-purple-800",
-    "sentences": [
-      "The city has many bright lights.",
-      "The plane flies over the tall towers.",
-      "Cars look like tiny ants below.",
-      "The pilot waves to the people down there.",
-      "At night the city looks like stars on earth."
-    ],
-    "vocabulary": ["city", "towers", "pilot", "bright"]
   },
   {
     "id": "ocean-rescue-2",
@@ -482,7 +633,21 @@
       "Pilot Jon hears the call for help on his radio.",
       "He drops a new rope down to the boat.",
       "The sailors pull the rope and feel hope again.",
-      "Teamwork and quick reading saved the day."
+      "Teamwork and quick reading saved the day.",
+      "The ocean waves are tall and roll fast today.",
+      "The sailboat rocks hard from side to side.",
+      "The sail flaps torn and loud in the sea wind.",
+      "Jon flies low and drops a bright light buoy.",
+      "The sailors wave their arms and shout with hope.",
+      "Jon reads the wave chart to stay close and safe.",
+      "He lowers a strong rope slow with care.",
+      "The rope swings but the sailors catch its end.",
+      "They tie the rope tight to the bent mast with knots.",
+      "Jon pulls the boat steady as the wind still blows.",
+      "The coast guard hears Jon's clear radio call for help.",
+      "A big ship comes fast to tow the sailboat home safe.",
+      "The sailors cheer loud as they reach calm water.",
+      "Jon feels proud that quick reading saved the whole crew."
     ],
     "vocabulary": ["ocean", "sailboat", "torn", "radio", "teamwork"]
   },
@@ -498,23 +663,22 @@
       "The glider needs a strong wind to take off.",
       "The young pilot reads the mountain wind chart.",
       "When the wind is right she jumps into the sky.",
-      "She soars like an eagle over the peaks."
+      "She soars like an eagle over the peaks.",
+      "The mountain air is thin and cold near the peak.",
+      "The inventor shows her long wind chart with care.",
+      "The chart lists wind speed at each tall ridge line.",
+      "The pilot reads the chart and learns wind shifts fast.",
+      "She checks the glider wings for cracks with focus.",
+      "The young pilot waits by the cliff edge for wind.",
+      "A strong gust lifts the small flag on the tall pole.",
+      "She runs fast and lifts off from the grassy slope.",
+      "The glider tilts and climbs high over pine trees.",
+      "She reads the wind and steers smooth with grace.",
+      "Eagles fly near and glide close beside her wing.",
+      "The valley opens wide with lakes and hills below.",
+      "She lands soft near the old stone hut with pride.",
+      "The inventor claps as the glider stops on calm grass."
     ],
     "vocabulary": ["mountain", "inventor", "glider", "chart", "soars"]
-  },
-  {
-    "id": "space-dream",
-    "level": 2,
-    "title": "Space Dream",
-    "coverEmoji": "🚀",
-    "color": "from-purple-600 to-slate-900",
-    "sentences": [
-      "Ben dreams of flying to space.",
-      "His paper plane can not go that high.",
-      "He reads books about rockets every night.",
-      "One day he will build his own rocket.",
-      "For now he flies his plane with joy."
-    ],
-    "vocabulary": ["dreams", "space", "rockets", "build"]
   }
 ]
