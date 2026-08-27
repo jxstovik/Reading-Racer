@@ -1,5 +1,297 @@
 [
   {
+    "id": "sight-i-see",
+    "level": 0,
+    "title": "I See",
+    "coverEmoji": "👀",
+    "color": "from-amber-200 to-yellow-500",
+    "sentences": [
+      "I see a cat.",
+      "I see a dog.",
+      "I see the sun.",
+      "We see the sky."
+    ],
+    "vocabulary": ["I", "see", "a", "cat", "dog"]
+  },
+  {
+    "id": "sight-my-dog",
+    "level": 0,
+    "title": "My Little Dog",
+    "coverEmoji": "🐶",
+    "color": "from-orange-200 to-amber-600",
+    "sentences": [
+      "This is my dog.",
+      "My dog is little.",
+      "My dog can run.",
+      "I love my dog."
+    ],
+    "vocabulary": ["my", "dog", "is", "little", "love"]
+  },
+  {
+    "id": "sight-we-go",
+    "level": 0,
+    "title": "We Can Go",
+    "coverEmoji": "🚶",
+    "color": "from-lime-200 to-green-500",
+    "sentences": [
+      "We can go.",
+      "We go to the park.",
+      "We play and run.",
+      "We have fun."
+    ],
+    "vocabulary": ["we", "can", "go", "play", "fun"]
+  },
+  {
+    "id": "sight-look-at-me",
+    "level": 0,
+    "title": "Look at Me",
+    "coverEmoji": "🙋",
+    "color": "from-pink-200 to-rose-500",
+    "sentences": [
+      "Look at me.",
+      "Look at you.",
+      "You can see me.",
+      "I can see you."
+    ],
+    "vocabulary": ["look", "at", "me", "you", "see"]
+  },
+  {
+    "id": "sight-colors",
+    "level": 0,
+    "title": "Red and Blue",
+    "coverEmoji": "🎨",
+    "color": "from-red-300 to-blue-600",
+    "sentences": [
+      "It is red.",
+      "It is blue.",
+      "It is yellow.",
+      "I like red and blue."
+    ],
+    "vocabulary": ["it", "is", "red", "blue", "yellow"]
+  },
+  {
+    "id": "sight-come-play",
+    "level": 0,
+    "title": "Come and Play",
+    "coverEmoji": "🤸",
+    "color": "from-cyan-200 to-blue-500",
+    "sentences": [
+      "Come and play.",
+      "Come play with me.",
+      "We play here.",
+      "We play there."
+    ],
+    "vocabulary": ["come", "and", "play", "with", "here"]
+  },
+  {
+    "id": "sight-where-is-it",
+    "level": 0,
+    "title": "Where Is It?",
+    "coverEmoji": "🔍",
+    "color": "from-violet-200 to-purple-600",
+    "sentences": [
+      "Where is it?",
+      "It is here.",
+      "It is not there.",
+      "Here it is!"
+    ],
+    "vocabulary": ["where", "is", "it", "here", "there"]
+  },
+  {
+    "id": "sight-big-small",
+    "level": 0,
+    "title": "Big and Little",
+    "coverEmoji": "🐘",
+    "color": "from-stone-200 to-slate-600",
+    "sentences": [
+      "I am big.",
+      "You are little.",
+      "We are big and little.",
+      "We are friends."
+    ],
+    "vocabulary": ["big", "little", "we", "are", "friends"]
+  },
+  {
+    "id": "bob-sam-sat",
+    "level": 1,
+    "title": "Sam Sat",
+    "coverEmoji": "🪑",
+    "color": "from-amber-300 to-orange-700",
+    "sentences": [
+      "Sam sat.",
+      "Mat sat.",
+      "Sam and Mat sat.",
+      "Pat sat on Mat.",
+      "Pat sat on Sam."
+    ],
+    "vocabulary": ["Sam", "Mat", "sat", "Pat", "on"]
+  },
+  {
+    "id": "bob-dot-ran",
+    "level": 1,
+    "title": "Dot Ran",
+    "coverEmoji": "🐕",
+    "color": "from-yellow-300 to-amber-700",
+    "sentences": [
+      "Dot is a dog.",
+      "Dot can run.",
+      "Dot ran to Sam.",
+      "Sam ran with Dot.",
+      "Dot and Sam ran."
+    ],
+    "vocabulary": ["Dot", "ran", "dog", "Sam", "with"]
+  },
+  {
+    "id": "bob-mac-wag",
+    "level": 1,
+    "title": "Mac and Wag",
+    "coverEmoji": "🐈",
+    "color": "from-orange-300 to-red-700",
+    "sentences": [
+      "Mac is a cat.",
+      "Wag is a dog.",
+      "Mac sat on a mat.",
+      "Wag sat on a rug.",
+      "Mac and Wag sat."
+    ],
+    "vocabulary": ["Mac", "Wag", "cat", "mat", "rug"]
+  },
+  {
+    "id": "bob-red-hen",
+    "level": 1,
+    "title": "The Red Hen",
+    "coverEmoji": "🐔",
+    "color": "from-red-300 to-orange-600",
+    "sentences": [
+      "The hen is red.",
+      "The hen can peck.",
+      "The hen has a nest.",
+      "The nest is in the pen.",
+      "The red hen sat on the nest."
+    ],
+    "vocabulary": ["hen", "red", "nest", "pen", "peck"]
+  },
+  {
+    "id": "bob-dan-fan",
+    "level": 1,
+    "title": "Dan and Nan Fan",
+    "coverEmoji": "🪭",
+    "color": "from-teal-200 to-cyan-700",
+    "sentences": [
+      "Dan has a fan.",
+      "Nan has a pan.",
+      "Dan can fan Nan.",
+      "Nan can fan Dan.",
+      "Dan and Nan fan."
+    ],
+    "vocabulary": ["Dan", "Nan", "fan", "pan", "can"]
+  },
+  {
+    "id": "bob-hot-pot",
+    "level": 1,
+    "title": "The Hot Pot",
+    "coverEmoji": "🍲",
+    "color": "from-stone-300 to-orange-700",
+    "sentences": [
+      "The pot is hot.",
+      "The pot has ham.",
+      "Dot got the pot.",
+      "The ham is in the pot.",
+      "Dot and Sam have ham."
+    ],
+    "vocabulary": ["hot", "pot", "ham", "Dot", "Sam"]
+  },
+  {
+    "id": "bob-ben-hen",
+    "level": 1,
+    "title": "Ben and the Hen",
+    "coverEmoji": "👦",
+    "color": "from-lime-300 to-green-700",
+    "sentences": [
+      "Ben has a pen.",
+      "The hen is in the pen.",
+      "Ben fed the hen.",
+      "The hen ate and ate.",
+      "Ben and the hen nap."
+    ],
+    "vocabulary": ["Ben", "hen", "pen", "fed", "nap"]
+  },
+  {
+    "id": "bob-big-pig",
+    "level": 1,
+    "title": "The Big Pig",
+    "coverEmoji": "🐷",
+    "color": "from-pink-300 to-rose-700",
+    "sentences": [
+      "The pig is big.",
+      "The pig has a wig.",
+      "The pig sat in mud.",
+      "The mud is on the wig.",
+      "The big pig is fun."
+    ],
+    "vocabulary": ["pig", "big", "wig", "mud", "fun"]
+  },
+  {
+    "id": "bob-box-top",
+    "level": 1,
+    "title": "Box Top",
+    "coverEmoji": "📦",
+    "color": "from-yellow-200 to-amber-700",
+    "sentences": [
+      "A top is in the box.",
+      "A mop is on the box.",
+      "Sam got the top.",
+      "Sam got the mop on top.",
+      "The top and mop on the box."
+    ],
+    "vocabulary": ["box", "top", "mop", "on", "got"]
+  },
+  {
+    "id": "bob-sun-fun",
+    "level": 1,
+    "title": "Sun Fun",
+    "coverEmoji": "☀️",
+    "color": "from-yellow-200 to-orange-600",
+    "sentences": [
+      "The sun is up.",
+      "We can run in the sun.",
+      "We have fun in the sun.",
+      "The sun is hot but fun.",
+      "Run, run, fun in the sun!"
+    ],
+    "vocabulary": ["sun", "fun", "run", "hot", "up"]
+  },
+  {
+    "id": "bob-mud-fun",
+    "level": 1,
+    "title": "Mud Fun",
+    "coverEmoji": "🐾",
+    "color": "from-amber-200 to-stone-700",
+    "sentences": [
+      "The pup dug in mud.",
+      "The pup is in the mud.",
+      "Mum said no to mud.",
+      "The pup ran from the mud.",
+      "Mum and pup hug."
+    ],
+    "vocabulary": ["pup", "mud", "dug", "Mum", "hug"]
+  },
+  {
+    "id": "bob-jim-mix",
+    "level": 1,
+    "title": "Jim Mix",
+    "coverEmoji": "🥣",
+    "color": "from-orange-200 to-red-600",
+    "sentences": [
+      "Jim can mix.",
+      "Jim will mix ham and jam.",
+      "Jim will fix a ham jam mix.",
+      "Jim and Kim eat the mix.",
+      "Yum, the mix is good!"
+    ],
+    "vocabulary": ["Jim", "mix", "ham", "jam", "Kim"]
+  },
+  {
     "id": "sam-first-flight",
     "level": 1,
     "title": "Sam's First Flight",

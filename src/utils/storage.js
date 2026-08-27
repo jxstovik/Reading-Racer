@@ -16,7 +16,7 @@ const defaults = {
   storiesCompleted: [], // ids
   sentenceHistory: [], // { storyId, sentenceIndex, score, grade, fuel, timestamp }
   settings: {
-    levelFilter: "all", // all | 1 | 2 | 3
+    levelFilter: "all", // all | 0 | 1 | 2 | 3
     passThreshold: 0.78, // plan suggests 0.80, we use slightly generous
     goodThreshold: 0.55,
     micSensitivity: "default",
@@ -90,9 +90,11 @@ export function addSentenceResult(state, { storyId, sentenceIndex, score, grade,
 }
 
 export function getFlightDurationSeconds(level = 1) {
-  // Minimum ~30s, scales with difficulty (Level 1 = 30s, Level 2 = 40s, Level 3 = 50s)
-  const lvl = Math.max(1, Math.min(3, Number(level) || 1));
-  return 30 + (lvl - 1) * 10;
+  // Level 0 = 25s (sight words, shortest), Level 1 = 30s, Level 2 = 40s, Level 3 = 50s
+  const lvl = Number(level);
+  if (lvl === 0) return 25;
+  const clamped = Math.max(1, Math.min(3, lvl || 1));
+  return 30 + (clamped - 1) * 10;
 }
 
 export function consumeFuelForFlight(state, ringsCollected = null) {
