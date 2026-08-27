@@ -8,7 +8,8 @@ export default function Library({ stories, progress, onSelect, settings, onSetti
       <div className="flex flex-wrap gap-2 justify-center mb-4">
         {[
           ["all", "All Stories"],
-          ["1", "Level 1"],
+          ["0", "Level 0 • Sight Words"],
+          ["1", "Level 1 • Bob Books"],
           ["2", "Level 2"],
           ["3", "Level 3"],
         ].map(([val, label]) => (
