@@ -188,3 +188,9 @@ test("a malformed unfinished mission cannot be restored from a backup", () => {
   p.first.learning.draft = { gameId: "count", rounds: [], index: 99 };
   assert.throws(() => validateBackup(exportProfiles(p)));
 });
+
+test("backup validation rejects a null draft collection", () => {
+  const p = profiles();
+  p.first.learning.drafts = null;
+  assert.throws(() => validateBackup(exportProfiles(p)));
+});

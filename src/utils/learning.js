@@ -138,6 +138,13 @@ export function validateBackup(value) {
   }
   for (const p of Object.values(value.profiles)) {
     if (p.learning) {
+      if (
+        p.learning.drafts !== undefined &&
+        (!p.learning.drafts ||
+          Array.isArray(p.learning.drafts) ||
+          typeof p.learning.drafts !== "object")
+      )
+        throw new Error("The backup has invalid unfinished missions.");
       for (const skill of Object.values(p.learning.skills)) {
         if (
           !skill ||

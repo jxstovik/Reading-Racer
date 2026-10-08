@@ -73,7 +73,7 @@ export default function MissionMenu({
             <h2>{g.name}</h2>
             <p>{g.invitation}</p>
             <span className="mission-play">
-              {progress.learning.drafts[draftKey({ gameId: g.id, together })]
+              {progress.learning.drafts?.[draftKey({ gameId: g.id, together })]
                 ? "Keep going →"
                 : "Let’s play →"}
             </span>

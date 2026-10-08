@@ -61,7 +61,11 @@ export function loadProgress(pilotId = "first") {
       ...parsed,
       settings: { ...defaults.settings, ...(parsed.settings || {}) },
       hangar: { ...defaults.hangar, ...(parsed.hangar || {}) },
-      learning: { ...emptyLearning(), ...(parsed.learning || {}) },
+      learning: {
+        ...emptyLearning(),
+        ...(parsed.learning || {}),
+        drafts: { ...(parsed.learning?.drafts || {}) },
+      },
     };
     if (merged.learning.draft)
       merged.learning.drafts[draftKey(merged.learning.draft)] =

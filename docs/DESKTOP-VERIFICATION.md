@@ -4,7 +4,7 @@ Target: this Linux x64 laptop, 2026-10-08. Implementation: Reading Racer 2.0.0.
 
 ## Automated checks
 
-- 18 tests: all six games at all three tiers have solvable questions and valid options; missions are deterministic for a saved session; co-op turns use individual levels; difficulty uses current-tier independent answers; incomplete/duplicate sessions do not award rewards; shared rewards retain separate records and another pilot's draft; backups round-trip and reject damaged missions; every current game prompt, option, clue, story sentence/word and phoneme has a bundled audio asset; legacy profiles, reading scoring and flight/story rewards remain covered.
+- 20 tests: all six games at all three tiers have solvable questions and valid options; missions are deterministic for a saved session; co-op turns use individual levels; difficulty uses current-tier independent answers; incomplete/duplicate sessions do not award rewards; shared rewards retain separate records and another pilot's draft; backups round-trip and reject damaged missions; every current game prompt, option, clue, story sentence/word and phoneme has a bundled audio asset; legacy profiles, reading scoring and flight/story rewards remain covered.
 - Linter: no warnings or errors.
 - Vite production build: successful.
 - Dependency audit: zero reported vulnerabilities. Only Electron is added for the native runtime; a separate installer framework was removed.

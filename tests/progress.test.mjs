@@ -114,3 +114,20 @@ test("story library has unique identifiers and nonempty sentences at every level
     );
   }
 });
+
+test("a partial learning save receives a fresh draft collection without losing fuel", () => {
+  values.clear();
+  const saved = structuredClone(defaults);
+  saved.currentFuel = 21;
+  saved.learning = {
+    history: [],
+    skills: {},
+    missions: [],
+    draft: null,
+    drafts: null,
+  };
+  saveProgress(saved, "first");
+  const loaded = loadProgress("first");
+  assert.equal(loaded.currentFuel, 21);
+  assert.deepEqual(loaded.learning.drafts, {});
+});

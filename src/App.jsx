@@ -96,7 +96,7 @@ export default function App() {
     };
     const key = draftKey({ gameId, together });
     const next =
-      progress.learning.drafts[key] ||
+      progress.learning.drafts?.[key] ||
       makeMission(gameId, profiles, pilotId, together);
     saveMission(next);
     setMissionDone(null);
