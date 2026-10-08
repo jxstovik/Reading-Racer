@@ -5,7 +5,7 @@ import {
   fuelForGrade,
 } from "../utils/speechMatch.js";
 import { useSpeechRecognition } from "../hooks/useSpeechRecognition.js";
-import { speak, playSuccess, playGood } from "../utils/sounds.js";
+import { speak, stopSpeech, playSuccess, playGood } from "../utils/sounds.js";
 import MicrophoneButton from "./MicrophoneButton.jsx";
 import FlightView from "./FlightView.jsx";
 import { getFlightDurationSeconds } from "../utils/storage.js";
@@ -56,7 +56,7 @@ export default function StoryReader({
         : "Read this sentence out loud. Tap any word for help.",
       settings.soundEnabled,
     );
-    return () => window.speechSynthesis?.cancel();
+    return () => stopSpeech();
   }, [story.id, story.level, settings.soundEnabled]);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function StoryReader({
 
   function practice() {
     cancel();
-    window.speechSynthesis?.cancel();
+    stopSpeech();
     evaluated.current = true;
     setFeedback({ grade: "practice", score: null, fuel: 7 });
     if (settings.soundEnabled) playGood();
@@ -97,7 +97,7 @@ export default function StoryReader({
     if (!feedback || committed.current) return;
     committed.current = true;
     cancel();
-    window.speechSynthesis?.cancel();
+    stopSpeech();
     onSentenceSuccess({
       storyId: story.id,
       sentenceIndex: idx,
@@ -124,6 +124,8 @@ export default function StoryReader({
           level={story.level}
           durationSeconds={getFlightDurationSeconds(story.level)}
           skin={settings.hangarSkin}
+          planeColor={settings.planeColor}
+          pace={settings.flightPace}
           soundEnabled={settings.soundEnabled}
           onDone={({ ringsCollected }) => {
             onFlightDone(ringsCollected);
@@ -235,7 +237,7 @@ export default function StoryReader({
                   onPress={() => {
                     if (isListening) stop();
                     else {
-                      window.speechSynthesis?.cancel();
+                      stopSpeech();
                       evaluated.current = false;
                       start();
                     }

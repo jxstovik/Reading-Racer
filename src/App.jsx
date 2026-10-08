@@ -3,7 +3,11 @@ import stories from "./data/stories.json";
 import Library from "./components/Library.jsx";
 import StoryReader from "./components/StoryReader.jsx";
 import Hangar from "./components/Hangar.jsx";
-import MapView from "./components/MapView.jsx";
+import StickerBook from "./components/StickerBook.jsx";
+import MissionMenu from "./components/MissionMenu.jsx";
+import MissionPlayer from "./components/MissionPlayer.jsx";
+import { makeMission, GAMES } from "./data/games.js";
+import { finishMission, draftKey } from "./utils/learning.js";
 import ParentDashboard from "./components/ParentDashboard.jsx";
 import FlightView from "./components/FlightView.jsx";
 import {
@@ -16,12 +20,14 @@ import {
   getFlightDurationSeconds,
   PILOTS,
 } from "./utils/storage.js";
-import { speak } from "./utils/sounds.js";
+import { speak, stopSpeech } from "./utils/sounds.js";
 
 export default function App() {
   const [pilotId, setPilotId] = useState("first");
   const [progress, setProgress] = useState(() => loadProgress("first"));
-  const [view, setView] = useState("library");
+  const [view, setView] = useState("home");
+  const [mission, setMission] = useState(null);
+  const [missionDone, setMissionDone] = useState(null);
   const [activeStory, setActiveStory] = useState(null);
   const [showParent, setShowParent] = useState(false);
   const [toast, setToast] = useState(null);
@@ -30,7 +36,7 @@ export default function App() {
   const holdTimer = useRef(null);
   const pilot = PILOTS.find((p) => p.id === pilotId);
   const canFly = progress.currentFuel >= progress.settings.flightFuelRequired;
-  const playing = view === "reading" || joyFlight;
+  const playing = view === "reading" || view === "mission" || joyFlight;
 
   useEffect(() => {
     saveProgress(progress, pilotId);
@@ -44,12 +50,14 @@ export default function App() {
 
   function switchPilot(id) {
     saveProgress(progress, pilotId);
-    window.speechSynthesis?.cancel();
+    stopSpeech();
     setPilotId(id);
     setProgress(loadProgress(id));
     setCelebration(null);
+    setMissionDone(null);
+    setMission(null);
     setToast(null);
-    setView("library");
+    setView("home");
   }
   function updateSettings(patch) {
     setProgress((p) => ({ ...p, settings: { ...p.settings, ...patch } }));
@@ -80,6 +88,48 @@ export default function App() {
       progress.settings.soundEnabled,
     );
   }
+  function startMission(gameId, together) {
+    const profiles = {
+      first: loadProgress("first"),
+      second: loadProgress("second"),
+      [pilotId]: progress,
+    };
+    const key = draftKey({ gameId, together });
+    const next =
+      progress.learning.drafts[key] ||
+      makeMission(gameId, profiles, pilotId, together);
+    saveMission(next);
+    setMissionDone(null);
+    setView("mission");
+  }
+  function saveMission(next) {
+    setMission(next);
+    setProgress((p) => ({
+      ...p,
+      learning: {
+        ...p.learning,
+        draft: next,
+        drafts: { ...p.learning.drafts, [draftKey(next)]: next },
+      },
+    }));
+  }
+  function completeMission(done) {
+    // Save synchronously before leaving the completion screen; session ids prevent double rewards.
+    const own = finishMission(progress, done, pilotId);
+    saveProgress(own, pilotId);
+    setProgress(own);
+    if (done.together) {
+      const other = pilotId === "first" ? "second" : "first";
+      saveProgress(finishMission(loadProgress(other), done, other), other);
+    }
+    setMission(null);
+    setMissionDone(done);
+    setView("home");
+    speak(
+      "Your mission is complete! You earned a sticker. You can fly, play again, or take a break.",
+      progress.settings.soundEnabled,
+    );
+  }
   function endHold() {
     clearTimeout(holdTimer.current);
   }
@@ -96,14 +146,14 @@ export default function App() {
           href="#"
           onClick={(e) => {
             e.preventDefault();
-            if (!playing) setView("library");
+            if (!playing) setView("home");
           }}
         >
           <span className="brand-icon" aria-hidden="true">
             ✈
           </span>
           <span>
-            Reading Racer<small>A little reading. A big adventure.</small>
+            Reading Racer<small>Little missions. Big adventures.</small>
           </span>
         </a>
         <div className="header-actions">
@@ -158,14 +208,17 @@ export default function App() {
       {!playing && (
         <nav className="main-nav" aria-label="Main menu">
           {[
-            ["library", "📚", "Read & play"],
+            ["home", "🎲", "Play"],
+            ["library", "📚", "Stories"],
             ["hangar", "🛩️", "My planes"],
-            ["map", "🌍", "My places"],
+            ["stickers", "⭐", "My stickers"],
           ].map(([key, emoji, label]) => (
             <button
               key={key}
               aria-current={view === key ? "page" : undefined}
               onClick={() => {
+                stopSpeech();
+                setMissionDone(null);
                 setView(key);
                 setCelebration(null);
               }}
@@ -196,6 +249,8 @@ export default function App() {
               level={1}
               durationSeconds={getFlightDurationSeconds(1)}
               skin={progress.settings.hangarSkin}
+              planeColor={progress.settings.planeColor}
+              pace={progress.settings.flightPace}
               soundEnabled={progress.settings.soundEnabled}
               onDone={({ ringsCollected }) => {
                 finishFlight(ringsCollected);
@@ -205,6 +260,89 @@ export default function App() {
           </div>
         ) : (
           <>
+            {view === "home" &&
+              (missionDone ? (
+                <section className="mission-celebration">
+                  <div className="celebration-sticker">
+                    {GAMES.find((g) => g.id === missionDone.gameId).emoji}
+                  </div>
+                  <h1>You did it, pilot!</h1>
+                  <p>
+                    A new sticker and fuel for your plane.
+                    {missionDone.together && " You both earned a sticker!"}
+                  </p>
+                  <div className="mission-bottom">
+                    {canFly && (
+                      <button
+                        className="primary-button"
+                        onClick={() => {
+                          setMissionDone(null);
+                          setJoyFlight(true);
+                        }}
+                      >
+                        ✈️ Fly my plane
+                      </button>
+                    )}
+                    <button
+                      className="quiet-button"
+                      onClick={() => setMissionDone(null)}
+                    >
+                      🎲 Choose another mission
+                    </button>
+                    <button
+                      className="quiet-button"
+                      onClick={() => {
+                        setView("break");
+                        setMissionDone(null);
+                        stopSpeech();
+                      }}
+                    >
+                      🌳 Take a break
+                    </button>
+                  </div>
+                </section>
+              ) : (
+                <MissionMenu
+                  progress={progress}
+                  pilot={pilot}
+                  onStart={startMission}
+                  onResume={() => {
+                    setMission(progress.learning.draft);
+                    setView("mission");
+                  }}
+                  onRead={() => setView("library")}
+                  onFly={() => setJoyFlight(true)}
+                />
+              ))}
+            {view === "break" && (
+              <section className="mission-celebration">
+                <div className="celebration-sticker">🌳</div>
+                <h1>Time for a little adventure!</h1>
+                <p>
+                  Stretch like a tree. Find a shape in your room. Tell someone
+                  your favorite part.
+                </p>
+                <button
+                  className="primary-button"
+                  onClick={() => setView("home")}
+                >
+                  ⌂ Back to my missions
+                </button>
+              </section>
+            )}
+            {view === "mission" && mission && (
+              <MissionPlayer
+                key={mission.id}
+                initialMission={mission}
+                soundEnabled={progress.settings.soundEnabled}
+                onSave={saveMission}
+                onComplete={completeMission}
+                onExit={() => {
+                  setMission(null);
+                  setView("home");
+                }}
+              />
+            )}
             {view === "library" && (
               <Library
                 stories={stories}
@@ -248,9 +386,12 @@ export default function App() {
               <Hangar
                 progress={progress}
                 onSelectSkin={(skin) => updateSettings({ hangarSkin: skin })}
+                onColor={(planeColor) => updateSettings({ planeColor })}
               />
             )}
-            {view === "map" && <MapView progress={progress} />}
+            {view === "stickers" && (
+              <StickerBook progress={progress} stories={stories} />
+            )}
           </>
         )}
       </main>
@@ -268,6 +409,16 @@ export default function App() {
       {showParent && (
         <ParentDashboard
           progress={progress}
+          pilotId={pilotId}
+          onRestore={() => {
+            setProgress(loadProgress(pilotId));
+            setJoyFlight(false);
+            stopSpeech();
+            setMission(null);
+            setMissionDone(null);
+            setActiveStory(null);
+            setView("home");
+          }}
           stories={stories}
           onUpdateSettings={updateSettings}
           onClearProgress={() => {
@@ -277,6 +428,12 @@ export default function App() {
               return;
             clearProgress(pilotId);
             setProgress(loadProgress(pilotId));
+            setJoyFlight(false);
+            setMission(null);
+            setMissionDone(null);
+            setActiveStory(null);
+            setView("home");
+            stopSpeech();
             setShowParent(false);
           }}
           onClose={() => setShowParent(false)}

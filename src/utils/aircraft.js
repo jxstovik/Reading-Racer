@@ -10,7 +10,7 @@ export const AIRCRAFT_ORDER = ["c172","b737","f16","f22","sr71","xb70"];
 
 // Draw top-down silhouette centered at (0,0) heading up (-Y). Scale controls size.
 // ctx assumed already translated. Draws in local coords.
-export function drawTopDownAircraft(ctx, id, { scale = 1, tilt = 0, thrust = 0 } = {}) {
+export function drawTopDownAircraft(ctx, id, { scale = 1, tilt = 0, thrust = 0, paint = "#38bdf8" } = {}) {
   ctx.save();
   ctx.rotate(tilt);
   ctx.scale(scale, scale);
@@ -29,6 +29,9 @@ export function drawTopDownAircraft(ctx, id, { scale = 1, tilt = 0, thrust = 0 }
     case "xb70": drawXB70(ctx, thrust); break;
     default: drawC172(ctx, thrust);
   }
+  // A bright fuselage stripe makes each pilot's chosen paint visible on every silhouette.
+  ctx.fillStyle = paint;
+  ctx.fillRect(-2, -17, 4, 23);
   ctx.restore();
 }
 

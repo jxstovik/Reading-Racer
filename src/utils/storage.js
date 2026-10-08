@@ -1,3 +1,4 @@
+import { emptyLearning, draftKey } from "./learning.js";
 import { AIRCRAFT, AIRCRAFT_ORDER } from "./aircraft.js";
 
 const KEY = "reading-racer:v1";
@@ -16,6 +17,7 @@ const LEGACY_SKIN_MAP = {
 };
 
 const defaults = {
+  learning: emptyLearning(),
   totalFuel: 0,
   flightsFlown: 0,
   storiesCompleted: [], // ids
@@ -31,6 +33,9 @@ const defaults = {
     practiceMode: false,
     flightFuelRequired: 28, // per plan 25-30
     hangarSkin: "c172",
+    planeColor: "#38bdf8",
+    flightPace: "gentle",
+    gameLevel: "auto",
   },
   hangar: {
     unlockedSkins: ["c172"],
@@ -56,7 +61,11 @@ export function loadProgress(pilotId = "first") {
       ...parsed,
       settings: { ...defaults.settings, ...(parsed.settings || {}) },
       hangar: { ...defaults.hangar, ...(parsed.hangar || {}) },
+      learning: { ...emptyLearning(), ...(parsed.learning || {}) },
     };
+    if (merged.learning.draft)
+      merged.learning.drafts[draftKey(merged.learning.draft)] =
+        merged.learning.draft;
     // migrate legacy skins -> new aircraft
     if (LEGACY_SKIN_MAP[merged.settings.hangarSkin]) {
       merged.settings.hangarSkin = LEGACY_SKIN_MAP[merged.settings.hangarSkin];
@@ -143,7 +152,7 @@ export function completeStory(state, storyId) {
   const next = structuredClone(state);
   next.storiesCompleted.push(storyId);
   // unlock aircraft by story milestones: 0:c172 (default), 2:b737, 4:f16, 6:f22, 9:sr71, 12:xb70
-  const count = next.storiesCompleted.length;
+  const count = next.storiesCompleted.length + next.learning.missions.length;
   const unlockByCount = {
     2: "b737",
     4: "f16",

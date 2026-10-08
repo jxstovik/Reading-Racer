@@ -1,13 +1,23 @@
+import {
+  learningStats,
+  exportProfiles,
+  validateBackup,
+} from "../utils/learning.js";
+import { loadProgress, saveProgress } from "../utils/storage.js";
 import { getStats } from "../utils/storage.js";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ParentDashboard({
   progress,
+  pilotId,
+  onRestore,
   stories,
   onUpdateSettings,
   onClearProgress,
   onClose,
 }) {
+  const [backupMessage, setBackupMessage] = useState("");
+  const skills = learningStats(progress);
   const dialog = useRef(null);
   useEffect(() => {
     const previous = document.activeElement;
@@ -26,6 +36,46 @@ export default function ParentDashboard({
     } else if (!event.shiftKey && document.activeElement === last) {
       event.preventDefault();
       first.focus();
+    }
+  }
+  function backup() {
+    const profiles = {
+      first: loadProgress("first"),
+      second: loadProgress("second"),
+      [pilotId]: progress,
+    };
+    const url = URL.createObjectURL(
+      new Blob([JSON.stringify(exportProfiles(profiles), null, 2)], {
+        type: "application/json",
+      }),
+    );
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "reading-racer-backup.json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    setBackupMessage(
+      "Backup downloaded. Keep this file to move progress to another installation.",
+    );
+  }
+  async function restore(event) {
+    const file = event.target.files[0];
+    event.target.value = "";
+    if (!file) return;
+    try {
+      const profiles = validateBackup(JSON.parse(await file.text()));
+      if (
+        !confirm(
+          "Replace both pilots’ progress with this backup? Export a backup first if you want to keep the current progress.",
+        )
+      )
+        return;
+      saveProgress(profiles.first, "first");
+      saveProgress(profiles.second, "second");
+      onRestore();
+      setBackupMessage("Both pilots’ progress restored.");
+    } catch (error) {
+      setBackupMessage(error.message);
     }
   }
   const stats = getStats(progress);
@@ -127,9 +177,78 @@ export default function ParentDashboard({
             )}
           </div>
 
+          <section className="bg-slate-50 rounded-2xl p-4 border">
+            <h3 className="font-bold">Learning missions</h3>
+            <p className="text-sm">
+              {progress.learning.missions.length} missions completed.
+              Independent means correct on the first choice without a clue.
+              These are practice records, not a standardized assessment.
+            </p>
+            <table className="learning-table">
+              <thead>
+                <tr>
+                  <th>Skill</th>
+                  <th>Steps</th>
+                  <th>Independent</th>
+                  <th>Clue requests</th>
+                </tr>
+              </thead>
+              <tbody>
+                {skills.map((g) => (
+                  <tr key={g.id}>
+                    <td>
+                      {g.emoji} {g.skill}
+                    </td>
+                    <td>{g.attempts}</td>
+                    <td>{g.independent}</td>
+                    <td>{g.helpRequests}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="text-xs mt-2">
+              Nature explanations:{" "}
+              {skills.reduce((n, g) => n + g.explanations, 0)} self-reported.
+              Spoken explanations are not recorded or assessed. Picture and
+              number answers are checked by the game.
+            </p>
+          </section>
           {/* settings */}
           <div className="bg-indigo-50 rounded-2xl p-4 border border-indigo-200">
-            <h3 className="font-bold text-indigo-800">Settings</h3>
+            <h3 className="font-bold text-indigo-800">
+              Settings for this pilot
+            </h3>
+            <label className="flex items-center justify-between mt-3">
+              <span>Mission difficulty</span>
+              <select
+                value={progress.settings.gameLevel}
+                onChange={(e) =>
+                  onUpdateSettings({ gameLevel: e.target.value })
+                }
+              >
+                <option value="auto">Adjust from independent practice</option>
+                <option value="0">Starting out</option>
+                <option value="1">Growing skills</option>
+                <option value="2">New challenges</option>
+              </select>
+            </label>
+            <p className="text-xs mt-2">
+              Automatic difficulty uses the last ten game answers. Clues and
+              retries count as supported practice. Microphone matches do not
+              affect it.
+            </p>
+            <label className="flex items-center justify-between mt-3">
+              <span>Flying pace</span>
+              <select
+                value={progress.settings.flightPace}
+                onChange={(e) =>
+                  onUpdateSettings({ flightPace: e.target.value })
+                }
+              >
+                <option value="gentle">Gentle</option>
+                <option value="brisk">Brisk</option>
+              </select>
+            </label>
 
             <label className="flex items-center justify-between mt-3">
               <span className="text-sm font-semibold">
@@ -213,6 +332,27 @@ export default function ParentDashboard({
             </div>
           </div>
 
+          <section>
+            <h3 className="font-bold mb-2">Save or move progress</h3>
+            <div className="backup-actions">
+              <button onClick={backup}>↓ Export both pilots</button>
+              <label>
+                ↑ Restore backup
+                <input
+                  type="file"
+                  accept=".json,application/json"
+                  onChange={restore}
+                />
+              </label>
+            </div>
+            <p role="status" className="text-sm mt-2">
+              {backupMessage}
+            </p>
+            <p className="text-xs mt-2">
+              Browser and standalone app saves are separate. Use a backup to
+              move existing progress into the desktop app.
+            </p>
+          </section>
           <div className="flex gap-3">
             <button
               onClick={onClearProgress}
@@ -229,8 +369,10 @@ export default function ParentDashboard({
           </div>
 
           <p className="text-[11px] text-slate-400 text-center">
-            Progress stays in this browser. The app does not record audio. Your
-            browser’s speech recognition provider may process voice online.
+            Progress stays on this device. Offline narration is synthesized
+            speech. The app does not record audio. The desktop app uses
+            listen-and-practice reading. In a browser, your browser’s speech
+            recognition provider may process voice online.
           </p>
         </div>
       </div>

@@ -9,6 +9,8 @@ export default function FlightView({
   fuelEarned,
   skin = "c172",
   soundEnabled = true,
+  planeColor = "#38bdf8",
+  pace = "gentle",
   onDone,
 }) {
   const canvasRef = useRef(null);
@@ -121,9 +123,9 @@ export default function FlightView({
     };
     gameRef.current = state;
 
-    const forwardSpeed = ac.speed; // px/s in logical coords
+    const forwardSpeed = pace === "brisk" ? 190 : 125; // px/s in logical coords
     const lateralBase = 240; // base strafe when holding turn - scaled slightly with tier
-    const lateralSpeed = lateralBase + (ac.tier - 1) * 18; // 240->330
+    const lateralSpeed = lateralBase; // Aircraft selection is cosmetic.
     const maxTilt = 0.55; // rad visual roll (~31deg)
     const ringHole = 30; // collect radius for flat ring (top-down)
     const ringOuter = 26;
@@ -618,6 +620,7 @@ export default function FlightView({
           scale: 1.15,
           tilt: roll,
           thrust: 0.6,
+          paint: planeColor,
         });
         // highlight hit radius for kids? faint
         // ctx.strokeStyle="rgba(14,165,233,0.18)"; ctx.beginPath(); ctx.arc(0,0,14,0,Math.PI*2); ctx.stroke();
@@ -649,7 +652,17 @@ export default function FlightView({
       cancelAnimationFrame(raf);
       clearTimeout(hintTimer);
     };
-  }, [phase, level, duration, aircraftId, ac.speed, ac.tier, soundEnabled]);
+  }, [
+    phase,
+    level,
+    duration,
+    aircraftId,
+    ac.speed,
+    ac.tier,
+    soundEnabled,
+    planeColor,
+    pace,
+  ]);
 
   const pct =
     phase === "ready"

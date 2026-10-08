@@ -1,58 +1,72 @@
 # Reading Racer ✈️
 
-Read a little, fill your fuel tank, then fly through rings. A React/Vite game for early readers, with a laptop layout and responsive phone layout.
+Offline learning adventures for two little pilots. Choose a short mission, earn fuel and a sticker, then fly. The desktop app includes its own runtime and narration; it needs no terminal or internet to play.
 
-## Run on this laptop
+## Install on this Linux laptop
 
-Use a current Node.js version supported by Vite 8 (Node 22.12+ or newer supported LTS).
+The built files are in `release/`:
+
+- **Portable:** extract `Reading-Racer-2.0.0-x64.tar.gz`, open the folder, and double-click `reading-racer`. Run `./install-desktop.sh` once to add Reading Racer to your application menu. No administrator access is needed. Keep Linux user namespaces enabled; the portable package preserves Electron's sandbox.
+- **Ubuntu/Debian installer:** open `Reading-Racer-2.0.0-amd64.deb` in your software installer. This installs the application and launcher for the computer. Administrator access is required by the OS installer.
+
+Existing browser progress stays where it is. In the browser's Parent Settings, **Export both pilots**, then **Restore backup** in the desktop app. Restoration explicitly asks before replacing both saves. Browser storage and desktop storage are separate.
+
+## Build or develop
+
+Use Node 22.12+ or a newer Vite-supported LTS, and npm.
 
 ```sh
 npm ci
-npm run build
-npm run desktop
-```
-
-The desktop launcher serves the built game only on `127.0.0.1:4173` and opens Chrome/Chromium/Edge in a separate app window. Keep the terminal running. If no supported browser is found, open the printed URL yourself. This is a browser-backed desktop app launcher, not a native installer. You can also use your browser's Install app action on the production URL when available.
-
-```sh
-npm run dev       # development
-npm run test      # progress, profile and game-data regression checks
+npm run dev
+npm test
 npm run lint
 npm run build
-npm run preview
+npm run desktop          # standalone Electron window
+npm run desktop:smoke    # verifies the native window, local assets and storage
+npm run desktop:pack     # Linux x64 portable archive and .deb (requires tar, dpkg-deb)
+npm run desktop:browser  # optional local Chrome/Edge app window on port 4173
 ```
 
-## Child play flow
+The packaging script copies the official Electron runtime and the compiled game. It needs no installer framework or native application dependencies at runtime. Electron's Chromium sandbox, context isolation and web security stay enabled. The renderer cannot access Node, open other pages, or make remote network requests. The desktop app uses offline listen-and-practice reading; online speech recognition remains an optional browser feature.
 
-- Pick **🐻 Little Pilot** or **🦊 Super Pilot**; each has a separate local save.
-- Fresh Little Pilot saves start with First words and listen-and-practice. Super Pilot starts with Short stories and the microphone. Existing saves stay with Little Pilot.
-- Choose **Let’s read** or **Keep reading**. Read one sentence at a time. Tap a word or Listen for audio help.
-- Microphone mode checks spoken attempts where the browser supports recognition. Practice mode lets the child say the words and tap **I said it!**; these steps are unscored.
-- Tap Next to bank fuel. Retries do not add extra fuel within that step. At a full tank, choose a flight or keep reading.
-- Tap **Take off**, steer with left/right arrows, A/D, on-screen buttons, or drag. Pause for a break. Leaving the window pauses the flight.
-- Finish a story to earn a sticker; collect stars and unlock planes. Stop and come back at the saved reading step.
+## Play and learn
 
-Hold the settings gear briefly, or focus it and press Enter, to open the parent view. It shows microphone matching separately from practice. These percentages reflect speech recognition, not a reading assessment. Clear progress affects only the selected pilot.
+- **🐻 Little Pilot / 🦊 Super Pilot:** independent local saves. Existing v1 saves are preserved under Little Pilot. Age is a starting point; set each pilot's difficulty to fit their current skills.
+- **Play:** two suggested missions at a time, with Other missions to choose any of the six subjects. Each mission has five steps, spoken prompts, picture choices, clues, and supportive retries.
+- **Sound Safari:** rhymes, beginning sounds, sound/letter links, blending and separate sound counters.
+- **Cargo Count:** load 1–5 crates with spoken counting, make ten, compare quantities, and pictured addition/subtraction within 20.
+- **Shape Hangar:** identify shapes, compare corners/sides, turn shapes, and move/rotate pieces to compose a shape.
+- **Pattern Runway:** AB, AAB and ABC patterns, then build and hear your own repeating runway.
+- **Story Detective:** narrated mini-stories, characters, two-event ordering, three-event sequencing, reasons, and supported endings.
+- **Nature Rescue:** animal habitats, plant needs and weather decisions. Optional spoken explanations are self-reported; the app does not record or assess them.
+- **Play together:** alternate bear/fox turns, each using their own difficulty. Both earn a sticker and equal fuel; their practice records remain separate.
+- **Stories:** 35 stories with one sentence at a time, word audio and a saved reading position. Practice reading is unscored.
+- **Flight:** choose Take off. Steer with arrows, A/D, drag or large buttons. Pause any time; leaving the window pauses automatically. Plane paint and models are cosmetic. A parent can choose Gentle or Brisk pace independently.
+- **Rewards:** every completed mission earns 35 fuel and a sticker. Story and mission completions share plane unlocks. Aircraft also unlock through flights. Nothing expires and there are no streak penalties. Completion offers a flight, another mission, or a clear break activity.
 
-## Offline and privacy
+Mission progress includes choices, cargo counts, clues and retries, so resuming does not turn supported practice into an independent answer. Starting another subject retains unfinished missions. Automatic difficulty mixes familiar questions with the current challenge. It moves up after at least five answers at that tier with 80% independent success, and down below 40%, using up to ten recent answers at the tier. Microphone matching never drives this progression. Manual difficulty is available in Parent Settings.
 
-Production builds generate a service worker that caches the game, stories and graphics after a successful first visit. Refresh once after initial loading if necessary. The built game can then reload without an internet connection while its cached version remains installed. Development mode does not install the service worker.
+Hold the gear briefly, or focus it and press Enter, to open Parent Settings. It shows practiced skills, independent answers, clue requests, and reading practice separately from microphone estimates. Clear progress affects the selected pilot; backup restoration affects both pilots after confirmation.
 
-Progress stays in LocalStorage for this browser and URL; clearing browser data removes it. Saves do not automatically transfer between development (`5173`), desktop (`4173`), a hosted site, or a different browser. The app does not record audio, but browser speech recognition may send voice to the browser vendor and require internet. Listen uses device/browser voices; availability offline depends on the installed voice. Practice mode continues without recognition.
+## Offline audio, saves and privacy
 
-## iPhone
+The standalone app bundles every game prompt, story sentence, word-help clip and phoneme clip. These are **synthetic American English voices**, generated with eSpeak NG, rather than human recordings. Phonemes use explicit phonetic input rather than letter-name TTS. Continuous consonants are sustained and stop consonants remain short, without added spoken vowels. Try the sounds together once; human voice recordings can replace assets without changing the game engine.
 
-The layout adapts to smaller screens, but physical iPhone testing and native iOS packaging remain future work. A phone needs a hosted HTTPS URL for reliable microphone permission; localhost on the laptop is not reachable from the phone. Use runtime feature detection and retain practice mode rather than assuming a browser supports recognition.
+To regenerate narration on Linux, install the build-only system libraries `libespeak-ng1`, `espeak-ng-data` and `libsndfile1`, then run:
 
-## Code and content
+```sh
+node scripts/audio-texts.mjs
+python3 scripts/generate-audio.py
+```
 
-- `src/App.jsx`: app shell, pilot switching, reading and flight flow.
-- `src/components/Library.jsx`: recommended story, resume, difficulty groups.
-- `src/components/StoryReader.jsx`: one sentence, word audio, practice and recognition feedback.
-- `src/components/FlightView.jsx`: canvas flight, start/pause and steering.
-- `src/utils/storage.js`: separate local saves and rewards.
-- `src/data/stories.json`: original stories, grouped into levels 0–3.
-- `scripts/offline-plugin.mjs`: build-specific offline cache.
-- `scripts/desktop.mjs`: local app-window launcher.
+The shipped Ogg assets need none of those libraries in the installed game. Known content uses bundled audio; other dynamic browser text can fall back to system speech. Browser production builds precache the full game and audio after a successful first visit. Close all game tabs to activate a newer cached version. Development does not register a service worker. The native app reads its bundled files directly and does not use a service worker.
 
-See [the review and learning roadmap](docs/LEARNING-ROADMAP.md) for additional games, subjects and the desktop/iPhone deployment path.
+Progress lives in local storage on this device. Clearing app/browser storage removes it; export a backup before moving installations. No accounts, ads, analytics or audio recordings are added. Browser speech recognition may send voice to its provider; the standalone app denies microphone access and remote requests, and retains unscored practice.
+
+## Verification and remaining platform work
+
+Automated checks cover question correctness, stable sibling turns and levels, adaptive progression, duplicate rewards, independent saves, backup validation and offline audio coverage. Browser checks exercise the child flows; the packaged native smoke check verifies a secure local window, rendered missions, audio and persistent storage.
+
+Actual child speech, comprehension, enjoyment and the naturalness of synthetic narration require a play session with your children. The implementation is a practice game, not a validated curriculum or reading assessment. iPhone installation, physical-device testing and native iOS packaging are the next platform phase.
+
+See [the completed desktop roadmap](docs/LEARNING-ROADMAP.md) and [desktop verification notes](docs/DESKTOP-VERIFICATION.md).

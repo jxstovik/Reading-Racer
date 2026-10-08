@@ -6,14 +6,14 @@ export function useSpeechRecognition() {
   const [interimTranscript, setInterimTranscript] = useState("");
   const [error, setError] = useState(null);
   const [isSupported] = useState(
-    () => !!(window.SpeechRecognition || window.webkitSpeechRecognition),
+    () => window.location.protocol !== "app:" && !!(window.SpeechRecognition || window.webkitSpeechRecognition),
   );
   const recRef = useRef(null);
   const accepting = useRef(false);
 
   useEffect(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return;
+    if (!SR || window.location.protocol === "app:") return;
     const rec = new SR();
     rec.continuous = false;
     rec.interimResults = true;

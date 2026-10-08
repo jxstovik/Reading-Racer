@@ -933,3 +933,567 @@ button {
     scroll-behavior: auto !important;
   }
 }
+/* Short, spoken learning missions. */
+.mission-home h1,
+.mission-celebration h1,
+.hangar-page h1,
+.sticker-book h1 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 900;
+  color: #17324d;
+  margin: 0.5rem 0;
+}
+.mission-welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+}
+.home-plane {
+  font-size: 5rem;
+  transform: rotate(-12deg);
+}
+.mission-home p,
+.hangar-page > p,
+.sticker-book > p {
+  color: #526981;
+  font-size: 1.1rem;
+}
+.mission-controls,
+.mission-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin: 1.5rem 0;
+}
+.mission-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+.mission-choices .mission-card {
+  display: block;
+  border: 3px solid #d5e6ed;
+  border-radius: 28px;
+  background: #fff;
+  text-align: left;
+  padding: 2rem;
+  box-shadow: 0 8px 0 #dbe8ef;
+  transition: transform 0.15s;
+}
+.mission-choices .mission-card:hover {
+  transform: translateY(-3px);
+}
+.mission-icon {
+  font-size: 4rem;
+}
+.mission-choices .mission-card h2 {
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #163853;
+  margin: 0.5rem 0;
+}
+.mission-play {
+  display: inline-block;
+  margin-top: 1.2rem;
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: #006b76;
+}
+.game-sounds {
+  background: #fff8e8;
+}
+.game-count {
+  background: #edf8ff;
+}
+.game-shapes {
+  background: #f2efff;
+}
+.game-patterns {
+  background: #fff0f6;
+}
+.game-stories {
+  background: #edf9f3;
+}
+.game-nature {
+  background: #f2fae6;
+}
+.mission-note {
+  text-align: center;
+}
+.resume-mission {
+  margin-bottom: 1rem;
+}
+.mission-player {
+  max-width: 1100px;
+  margin: auto;
+}
+.mission-steps {
+  display: flex;
+  gap: 0.4rem;
+}
+.mission-steps span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  font-weight: 900;
+}
+.mission-steps .filled {
+  background: #0e8793;
+  color: #fff;
+}
+.question-card {
+  background: white;
+  border: 2px solid #d8e8f0;
+  border-radius: 28px;
+  padding: clamp(1rem, 3vw, 2rem);
+  text-align: center;
+  box-shadow: 0 12px 30px #16334b0a;
+  margin-top: 1rem;
+}
+.question-card h1 {
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  font-weight: 900;
+  color: #15354e;
+  margin: 0.6rem 0 1rem;
+}
+.question-card h1:focus {
+  outline: none;
+}
+.listen-button {
+  border: 2px solid #9ed4e5;
+  border-radius: 18px;
+  background: #eaf7ff;
+  font-weight: 800;
+  padding: 0.7rem 1.3rem;
+  min-height: 52px;
+  font-size: 1.1rem;
+}
+.question-scene {
+  font-size: 4rem;
+  min-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.8rem auto;
+  max-width: 900px;
+}
+.question-scene.long-scene {
+  font-size: clamp(1.5rem, 3.7vw, 2.8rem);
+  word-break: break-word;
+}
+.answer-options {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.option-wrap {
+  position: relative;
+  min-width: 160px;
+  max-width: 280px;
+  flex: 1;
+}
+.answer-button {
+  width: 100%;
+  min-height: 135px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1rem 2.5rem 1rem 1rem;
+  background: #f2f7fc;
+  border: 3px solid #bed5e7;
+  border-radius: 22px;
+  font-weight: 900;
+  color: #17354d;
+  font-size: 1.2rem;
+}
+.answer-button:hover:enabled {
+  border-color: #008692;
+  background: #e5faf7;
+}
+.answer-button.correct {
+  background: #d8f8e6;
+  border-color: #29a76f;
+}
+.answer-button:disabled {
+  opacity: 0.85;
+}
+.answer-picture {
+  font-size: 3rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.option-listen {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  min-height: 48px;
+  min-width: 48px;
+  background: white;
+  border: 1px solid #c9dde9;
+  border-radius: 15px;
+}
+.question-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+.mission-feedback {
+  min-height: 38px;
+  color: #146959;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.mission-feedback p {
+  font-weight: 600;
+  color: #526981;
+}
+.mini-story {
+  max-width: 720px;
+  margin: 1rem auto;
+  color: #526981;
+  font-size: 1.05rem;
+}
+.ten-frame {
+  display: grid;
+  grid-template-columns: repeat(5, 48px);
+  gap: 4px;
+  justify-content: center;
+  margin: 1rem;
+}
+.ten-frame span {
+  height: 48px;
+  border: 2px solid #9ebdce;
+  font-size: 1.8rem;
+  border-radius: 8px;
+}
+.cargo-display {
+  padding: 1rem;
+  background: #edf6fa;
+  min-height: 100px;
+  font-size: 2.2rem;
+  border-radius: 20px;
+}
+.cargo-display b {
+  display: block;
+  color: #17354d;
+}
+.counter-controls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1rem;
+  flex-wrap: wrap;
+}
+.math-crates {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8rem;
+}
+.math-crates span {
+  max-width: 500px;
+  overflow-wrap: anywhere;
+}
+.sound-counters button {
+  min-width: 60px;
+  min-height: 50px;
+  margin: 5px;
+  background: #fff2c7;
+  border: 2px solid #e2ba62;
+  border-radius: 15px;
+  font-weight: 900;
+}
+.shape-pieces {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+}
+.shape-pieces > span {
+  font-size: 4rem;
+  color: #7c58ba;
+}
+.pattern-builder {
+  background: #fff6e8;
+  padding: 1rem;
+  border-radius: 20px;
+  margin: 1rem;
+}
+.pattern-builder > div {
+  font-size: 2rem;
+  min-height: 48px;
+}
+.explanation-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem;
+}
+.explanation-check input {
+  width: 24px;
+  height: 24px;
+}
+.mission-celebration {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #fff;
+  border-radius: 30px;
+}
+.celebration-sticker {
+  font-size: 6rem;
+}
+.mission-celebration .mission-bottom {
+  justify-content: center;
+}
+.paint-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.paint-options button {
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 0 0 2px #c3d5df;
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+.paint-options button[aria-pressed="true"] {
+  box-shadow: 0 0 0 4px #16354d;
+}
+.fleet-grid,
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.plane-card,
+.sticker {
+  border: 3px solid #d2e3ee;
+  border-radius: 24px;
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+.plane-card[aria-pressed="true"] {
+  border-color: #16a085;
+  background: #e9fcf5;
+}
+.plane-card:disabled {
+  opacity: 0.65;
+}
+.plane-card canvas {
+  margin: auto;
+}
+.plane-card h2,
+.sticker h2 {
+  font-size: 1.1rem;
+  font-weight: 900;
+}
+.plane-card span,
+.sticker p {
+  font-size: 0.95rem;
+  color: #526981;
+}
+.sticker > span {
+  font-size: 3.5rem;
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+.sticker.earned > span {
+  filter: none;
+  opacity: 1;
+}
+.sticker.earned {
+  background: #fff9e8;
+  border-color: #edcf79;
+}
+.sticker-grid {
+  margin: 1.5rem 0 2rem;
+}
+.learning-table {
+  width: 100%;
+  font-size: 0.8rem;
+}
+.learning-table td,
+.learning-table th {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #dae3ea;
+}
+.backup-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.backup-actions button,
+.backup-actions label {
+  padding: 0.7rem;
+  background: #e8f3ff;
+  border: 1px solid #bdd5ed;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+.backup-actions input {
+  max-width: 100%;
+}
+@media (max-width: 720px) {
+  .mission-choices {
+    gap: 1rem;
+  }
+  .mission-choices .mission-card {
+    padding: 1.2rem;
+  }
+  .mission-choices .mission-card h2 {
+    font-size: 1.2rem;
+  }
+  .mission-icon {
+    font-size: 3rem;
+  }
+  .home-plane {
+    display: none;
+  }
+  .fleet-grid,
+  .sticker-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .main-nav {
+    flex-wrap: wrap;
+  }
+  .mission-steps span {
+    width: 26px;
+    height: 26px;
+  }
+  .answer-options {
+    gap: 0.6rem;
+  }
+  .option-wrap {
+    min-width: 120px;
+  }
+  .answer-button {
+    font-size: 1rem;
+  }
+  .answer-picture {
+    font-size: 2.5rem;
+  }
+  .reader-toolbar {
+    flex-wrap: wrap;
+  }
+  .question-actions {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+.shape-pieces {
+  flex-wrap: wrap;
+}
+.letter-sound {
+  margin: 1rem;
+}
+.letter-sound b {
+  font-size: 1.8rem;
+}
+.pattern-builder button:disabled {
+  opacity: 0.4;
+}
+.question-scene {
+  overflow-wrap: anywhere;
+}
+.backup-actions label input {
+  display: block;
+  margin-top: 0.5rem;
+}
+@media (min-width: 1000px) {
+  .app-shell:has(.mission-player) .app-header {
+    padding: 8px 36px;
+  }
+  .mission-player .reader-toolbar {
+    margin-bottom: 10px;
+  }
+  .mission-player .question-card {
+    padding: 16px 24px;
+    margin-top: 10px;
+  }
+  .mission-player .question-card h1 {
+    font-size: 1.8rem;
+    margin: 6px 0 10px;
+  }
+  .mission-player .question-scene {
+    min-height: 64px;
+    font-size: 3.5rem;
+    margin: 8px auto;
+  }
+  .mission-player .answer-button {
+    min-height: 110px;
+  }
+  .mission-player .answer-options {
+    margin: 12px 0;
+  }
+  .question-card:has(.pattern-builder) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    column-gap: 20px;
+  }
+  .question-card:has(.pattern-builder) > .eyebrow,
+  .question-card:has(.pattern-builder) > h1,
+  .question-card:has(.pattern-builder) > .listen-button,
+  .question-card:has(.pattern-builder) > .mission-feedback,
+  .question-card:has(.pattern-builder) > .question-actions {
+    grid-column: 1/-1;
+  }
+  .question-card:has(.pattern-builder) > .listen-button {
+    justify-self: center;
+  }
+  .question-card:has(.pattern-builder) > .question-scene {
+    grid-column: 1;
+    grid-row: 4;
+  }
+  .question-card:has(.pattern-builder) > .answer-options {
+    grid-column: 1;
+    grid-row: 5;
+  }
+  .question-card:has(.pattern-builder) > .pattern-builder {
+    grid-column: 2;
+    grid-row: 4/6;
+    margin: 8px 0;
+  }
+  .question-card:has(.pattern-builder) .option-wrap {
+    min-width: 130px;
+  }
+}
+.mini-story summary {
+  cursor: pointer;
+  color: #526981;
+  font-weight: 700;
+}
+.mini-story p {
+  margin-top: 0.5rem;
+}
+.pattern-builder .quiet-button {
+  min-width: 48px;
+  margin-top: 5px;
+}
