@@ -1,3 +1,4 @@
+import narration from "../data/narration.json";
 let ctx = null;
 function getCtx() {
   if (ctx) return ctx;
@@ -58,13 +59,57 @@ export function playFlight() {
   osc.stop(c.currentTime + 2.0);
 }
 
-export function speak(text, enabled = true) {
-  if (!enabled) return;
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
+let activeAudio = null;
+let sequenceToken = 0;
+let activeResolve = null;
+export function stopSpeech() {
+  sequenceToken++;
+  activeResolve?.();
+  activeResolve = null;
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio = null;
+  }
+  window.speechSynthesis?.cancel();
+}
+function playSpeech(text, token) {
+  return new Promise((resolve) => {
+    if (token !== sequenceToken) return resolve();
+    activeResolve = resolve;
+    const path = narration[text];
+    if (path) {
+      const audio = new Audio(path);
+      activeAudio = audio;
+      audio.onended = resolve;
+      audio.onerror = () => {
+        if (token === sequenceToken) fallbackSpeech(text, resolve);
+        else resolve();
+      };
+      audio.play().catch(() => resolve());
+    } else fallbackSpeech(text, resolve);
+  });
+}
+function fallbackSpeech(text, done) {
+  if (!("speechSynthesis" in window) || text.startsWith("phoneme:"))
+    return done();
   const u = new SpeechSynthesisUtterance(text);
   u.rate = 0.9;
-  u.pitch = 1.0;
   u.lang = "en-US";
+  u.onend = done;
+  u.onerror = done;
   window.speechSynthesis.speak(u);
+}
+export function speak(text, enabled = true) {
+  if (!enabled) return;
+  stopSpeech();
+  void playSpeech(text, sequenceToken);
+}
+export async function speakSequence(texts, enabled = true) {
+  if (!enabled) return;
+  stopSpeech();
+  const token = sequenceToken;
+  for (const text of texts) {
+    if (token !== sequenceToken) break;
+    await playSpeech(text, token);
+  }
 }

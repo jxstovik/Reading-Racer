@@ -1,15 +1,20 @@
 {
   "name": "reading-racer",
   "private": true,
-  "version": "1.0.0",
-  "description": "Fuel Your Airplane By Reading — a reading game for early readers (4-8)" ,
+  "version": "2.0.0",
+  "description": "Offline reading, phonics, number, shape, story and nature adventures for little pilots",
   "type": "module",
   "scripts": {
+    "test": "node --test",
+    "desktop": "electron .",
     "dev": "vite --host",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview --host",
-    "serve": "vite preview --host --port 4173"
+    "serve": "vite preview --host --port 4173",
+    "desktop:browser": "node scripts/desktop.mjs",
+    "desktop:pack": "npm run build && node scripts/package-desktop.mjs",
+    "desktop:smoke": "electron . --smoke-test"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -20,8 +25,14 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "electron": "^44.7.0",
     "oxlint": "^1.79.0",
     "tailwindcss": "^4.3.3",
     "vite": "^8.2.2"
-  }
+  },
+  "main": "desktop/main.cjs",
+  "author": {
+    "name": "jxstovik"
+  },
+  "homepage": "https://github.com/jxstovik/Reading-Racer"
 }
