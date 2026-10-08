@@ -183,7 +183,7 @@ export default function ParentDashboard({
                 }
               />
               <span className="text-sm font-semibold">
-                Dyslexia-friendly spacing/font
+                Extra spacing for reading
               </span>
             </label>
 
@@ -196,7 +196,7 @@ export default function ParentDashboard({
                 }
               />
               <span className="text-sm font-semibold">
-                Sound effects & speech
+                Automatic sounds & spoken prompts
               </span>
             </label>
 

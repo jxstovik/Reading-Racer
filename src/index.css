@@ -514,11 +514,18 @@ button {
   margin-bottom: 25px;
 }
 .reader-scene h1 {
+  background: #fff;
+  border-radius: 14px;
+  padding: 10px 16px;
+  position: relative;
   font-size: 25px;
   font-weight: 900;
   color: #18354b;
 }
 .reader-scene p {
+  background: #ffffffe8;
+  border-radius: 12px;
+  padding: 8px 12px;
   font-size: 14px;
   color: #18354b;
   max-width: 200px;
