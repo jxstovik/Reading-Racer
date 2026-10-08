@@ -5,6 +5,8 @@
   "description": "Fuel Your Airplane By Reading — a reading game for early readers (4-8)" ,
   "type": "module",
   "scripts": {
+    "test": "node --test",
+    "desktop": "node scripts/desktop.mjs",
     "dev": "vite --host",
     "build": "vite build",
     "lint": "oxlint",

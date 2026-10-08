@@ -1,6 +1,11 @@
 import { AIRCRAFT, AIRCRAFT_ORDER } from "./aircraft.js";
 
 const KEY = "reading-racer:v1";
+export const PILOTS = [
+  { id: "first", name: "Little Pilot", emoji: "🐻", level: "0" },
+  { id: "second", name: "Super Pilot", emoji: "🦊", level: "1" },
+];
+const progressKey = (pilotId) => (pilotId === "second" ? `${KEY}:second` : KEY);
 // Map legacy skin keys -> new aircraft
 const LEGACY_SKIN_MAP = {
   classic: "c172",
@@ -15,6 +20,7 @@ const defaults = {
   flightsFlown: 0,
   storiesCompleted: [], // ids
   sentenceHistory: [], // { storyId, sentenceIndex, score, grade, fuel, timestamp }
+  storyPositions: {},
   settings: {
     levelFilter: "all", // all | 0 | 1 | 2 | 3
     passThreshold: 0.78, // plan suggests 0.80, we use slightly generous
@@ -22,6 +28,7 @@ const defaults = {
     micSensitivity: "default",
     dyslexiaFont: false,
     soundEnabled: true,
+    practiceMode: false,
     flightFuelRequired: 28, // per plan 25-30
     hangarSkin: "c172",
   },
@@ -33,10 +40,16 @@ const defaults = {
   currentFuel: 0, // fuel in tank for next flight
 };
 
-export function loadProgress() {
+export function loadProgress(pilotId = "first") {
   try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return structuredClone(defaults);
+    const raw = localStorage.getItem(progressKey(pilotId));
+    if (!raw) {
+      const fresh = structuredClone(defaults);
+      fresh.settings.levelFilter =
+        PILOTS.find((p) => p.id === pilotId)?.level || "0";
+      fresh.settings.practiceMode = pilotId === "first";
+      return fresh;
+    }
     const parsed = JSON.parse(raw);
     const merged = {
       ...structuredClone(defaults),
@@ -48,31 +61,38 @@ export function loadProgress() {
     if (LEGACY_SKIN_MAP[merged.settings.hangarSkin]) {
       merged.settings.hangarSkin = LEGACY_SKIN_MAP[merged.settings.hangarSkin];
     }
-    merged.hangar.unlockedSkins = merged.hangar.unlockedSkins.map((k) => LEGACY_SKIN_MAP[k] || k);
+    merged.hangar.unlockedSkins = merged.hangar.unlockedSkins.map(
+      (k) => LEGACY_SKIN_MAP[k] || k,
+    );
     // dedupe & ensure at least c172
     merged.hangar.unlockedSkins = [...new Set(merged.hangar.unlockedSkins)];
-    if (!merged.hangar.unlockedSkins.includes("c172")) merged.hangar.unlockedSkins.unshift("c172");
+    if (!merged.hangar.unlockedSkins.includes("c172"))
+      merged.hangar.unlockedSkins.unshift("c172");
     // guard unknown skin
-    if (!AIRCRAFT[merged.settings.hangarSkin]) merged.settings.hangarSkin = "c172";
+    if (!AIRCRAFT[merged.settings.hangarSkin])
+      merged.settings.hangarSkin = "c172";
     return merged;
   } catch {
     return structuredClone(defaults);
   }
 }
 
-export function saveProgress(state) {
+export function saveProgress(state, pilotId = "first") {
   try {
-    localStorage.setItem(KEY, JSON.stringify(state));
+    localStorage.setItem(progressKey(pilotId), JSON.stringify(state));
   } catch (e) {
     console.warn("save failed", e);
   }
 }
 
-export function clearProgress() {
-  localStorage.removeItem(KEY);
+export function clearProgress(pilotId = "first") {
+  localStorage.removeItem(progressKey(pilotId));
 }
 
-export function addSentenceResult(state, { storyId, sentenceIndex, score, grade, fuel }) {
+export function addSentenceResult(
+  state,
+  { storyId, sentenceIndex, score, grade, fuel },
+) {
   const next = structuredClone(state);
   next.sentenceHistory.push({
     storyId,
@@ -142,7 +162,13 @@ export function completeStory(state, storyId) {
 }
 
 export function maybeUnlockByFlights(state) {
-  const thresholds = { 5: "b737", 10: "f16", 18: "f22", 28: "sr71", 40: "xb70" };
+  const thresholds = {
+    5: "b737",
+    10: "f16",
+    18: "f22",
+    28: "sr71",
+    40: "xb70",
+  };
   const need = thresholds[state.flightsFlown];
   if (need && !state.hangar.unlockedSkins.includes(need)) {
     const next = structuredClone(state);
@@ -154,17 +180,29 @@ export function maybeUnlockByFlights(state) {
 
 export function getStats(state) {
   const totalSentences = state.sentenceHistory.length;
-  const avgScore = totalSentences
-    ? state.sentenceHistory.reduce((s, r) => s + r.score, 0) / totalSentences
+  const scored = state.sentenceHistory.filter((r) => Number.isFinite(r.score));
+  const avgScore = scored.length
+    ? scored.reduce((s, r) => s + r.score, 0) / scored.length
     : 0;
-  const perfect = state.sentenceHistory.filter((r) => r.grade === "perfect").length;
+  const perfect = state.sentenceHistory.filter(
+    (r) => r.grade === "perfect",
+  ).length;
   const strugglingWords = computeStrugglingWords(state);
-  return { totalSentences, avgScore, perfect, strugglingWords };
+  return {
+    totalSentences,
+    avgScore,
+    scoredCount: scored.length,
+    practiceCount: totalSentences - scored.length,
+    perfect,
+    strugglingWords,
+  };
 }
 
 function computeStrugglingWords(state) {
   // naive: count missed grades per story? We don't store word-level; approximate via low scores
-  const low = state.sentenceHistory.filter((r) => r.score < 0.55);
+  const low = state.sentenceHistory.filter(
+    (r) => Number.isFinite(r.score) && r.score < 0.55,
+  );
   // we could later expand to word-level history
   return low.slice(-5).map((r) => r.storyId);
 }

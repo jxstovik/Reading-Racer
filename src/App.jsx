@@ -1,224 +1,281 @@
-import { useEffect, useMemo, useState } from "react";
-import storiesData from "../public/stories/stories.json";
+import { useEffect, useRef, useState } from "react";
+import stories from "./data/stories.json";
 import Library from "./components/Library.jsx";
 import StoryReader from "./components/StoryReader.jsx";
-import FuelGauge from "./components/FuelGauge.jsx";
 import Hangar from "./components/Hangar.jsx";
 import MapView from "./components/MapView.jsx";
 import ParentDashboard from "./components/ParentDashboard.jsx";
-import { loadProgress, saveProgress, addSentenceResult, consumeFuelForFlight, completeStory, clearProgress, getFlightDurationSeconds } from "./utils/storage.js";
 import FlightView from "./components/FlightView.jsx";
+import {
+  loadProgress,
+  saveProgress,
+  addSentenceResult,
+  consumeFuelForFlight,
+  completeStory,
+  clearProgress,
+  getFlightDurationSeconds,
+  PILOTS,
+} from "./utils/storage.js";
+import { speak } from "./utils/sounds.js";
 
 export default function App() {
-  const [progress, setProgress] = useState(() => loadProgress());
-  const [view, setView] = useState("library"); // library | reading | hangar | map
+  const [pilotId, setPilotId] = useState("first");
+  const [progress, setProgress] = useState(() => loadProgress("first"));
+  const [view, setView] = useState("library");
   const [activeStory, setActiveStory] = useState(null);
   const [showParent, setShowParent] = useState(false);
-  const [parentHoldTimer, setParentHoldTimer] = useState(null);
   const [toast, setToast] = useState(null);
-  const [joyFlight, setJoyFlight] = useState(null); // { level, duration } when a manual flight is active
+  const [joyFlight, setJoyFlight] = useState(false);
+  const [celebration, setCelebration] = useState(null);
+  const holdTimer = useRef(null);
+  const pilot = PILOTS.find((p) => p.id === pilotId);
+  const canFly = progress.currentFuel >= progress.settings.flightFuelRequired;
+  const playing = view === "reading" || joyFlight;
 
-  const stories = storiesData;
-
-  // persist
   useEffect(() => {
-    saveProgress(progress);
-  }, [progress]);
-
-  // toast auto clear
+    saveProgress(progress, pilotId);
+  }, [progress, pilotId]);
   useEffect(() => {
     if (!toast) return;
-    const t = setTimeout(() => setToast(null), 3000);
-    return () => clearTimeout(t);
+    const timer = setTimeout(() => setToast(null), 3500);
+    return () => clearTimeout(timer);
   }, [toast]);
+  useEffect(() => () => clearTimeout(holdTimer.current), []);
 
-  function handleSentenceSuccess({ storyId, sentenceIndex, score, grade, fuel }) {
-    setProgress((p) => addSentenceResult(p, { storyId, sentenceIndex, score, grade, fuel }));
-  }
-
-  // flight consumption: called from StoryReader after FlightView done (now ring-aware)
-  const progressWithFlight = useMemo(() => ({
-    ...progress,
-    onFlightDone: (ringsCollected) => {
-      setProgress((p) => consumeFuelForFlight(p, typeof ringsCollected === "number" ? ringsCollected : null));
-      const msg = typeof ringsCollected === "number"
-        ? `✈️ Flight complete! ${ringsCollected} rings → stars!`
-        : "✈️ Flight complete! Fuel used, stars earned!";
-      setToast(msg);
-    },
-  }), [progress]);
-
-  function handleStoryComplete(storyId) {
-    setProgress((p) => completeStory(p, storyId));
-    setToast(`🎉 Finished "${stories.find(s=>s.id===storyId)?.title}"! Sticker earned!`);
+  function switchPilot(id) {
+    saveProgress(progress, pilotId);
+    window.speechSynthesis?.cancel();
+    setPilotId(id);
+    setProgress(loadProgress(id));
+    setCelebration(null);
+    setToast(null);
     setView("library");
-    setActiveStory(null);
   }
-
-  function handleSelectSkin(skin) {
-    setProgress((p) => ({ ...p, settings: { ...p.settings, hangarSkin: skin } }));
-    setToast(`✈️ Equipped ${skin}!`);
-  }
-
-  function handleSettingsUpdate(patch) {
+  function updateSettings(patch) {
     setProgress((p) => ({ ...p, settings: { ...p.settings, ...patch } }));
   }
-
-  function handleClearProgress() {
-    if (!confirm("Clear all progress? This cannot be undone.")) return;
-    clearProgress();
-    setProgress(loadProgress());
-    setToast("Progress cleared");
-    setShowParent(false);
+  function selectStory(story) {
+    setCelebration(null);
+    setActiveStory(story);
+    setView("reading");
   }
-
-  // long-press for parent dashboard (hidden from child)
-  function onParentPressStart() {
-    const t = setTimeout(() => setShowParent(true), 900);
-    setParentHoldTimer(t);
+  function finishFlight(ringsCollected) {
+    setProgress((p) => consumeFuelForFlight(p, ringsCollected));
+    setToast(`⭐ ${ringsCollected || 3} stars earned. Nice flying!`);
   }
-  function onParentPressEnd() {
-    if (parentHoldTimer) clearTimeout(parentHoldTimer);
-    setParentHoldTimer(null);
+  function finishStory(storyId) {
+    const story = stories.find((s) => s.id === storyId);
+    setProgress((p) => {
+      const next = completeStory(p, storyId);
+      return {
+        ...next,
+        storyPositions: { ...next.storyPositions, [storyId]: 0 },
+      };
+    });
+    setCelebration(story);
+    setActiveStory(null);
+    setView("library");
+    speak(
+      "You finished your story! Well done, pilot.",
+      progress.settings.soundEnabled,
+    );
+  }
+  function endHold() {
+    clearTimeout(holdTimer.current);
+  }
+  function startHold() {
+    endHold();
+    holdTimer.current = setTimeout(() => setShowParent(true), 900);
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-100 via-sky-50 to-amber-50">
-      {/* header */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-sky-100">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xl shadow">✈️</div>
-            <div>
-              <h1 className="font-black text-slate-800 leading-none text-lg">Reading Racer</h1>
-              <p className="text-[11px] text-slate-500 font-semibold tracking-wide">FUEL YOUR AIRPLANE BY READING</p>
+    <div className="app-shell">
+      <header className="app-header">
+        <a
+          className="brand"
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            if (!playing) setView("library");
+          }}
+        >
+          <span className="brand-icon" aria-hidden="true">
+            ✈
+          </span>
+          <span>
+            Reading Racer<small>A little reading. A big adventure.</small>
+          </span>
+        </a>
+        <div className="header-actions">
+          {!playing && (
+            <div className="pilot-switch" aria-label="Choose your pilot">
+              {PILOTS.map((p) => (
+                <button
+                  key={p.id}
+                  aria-label={p.name}
+                  aria-pressed={p.id === pilotId}
+                  onClick={() => switchPilot(p.id)}
+                >
+                  <span aria-hidden="true">{p.emoji}</span>
+                  <span>{p.name}</span>
+                </button>
+              ))}
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="hidden sm:block w-40">
-              <FuelGauge current={progress.currentFuel} required={progress.settings.flightFuelRequired} total={progress.totalFuel} />
-            </div>
-
-            {/* parent hidden button: hold 900ms */}
-            <button
-              onMouseDown={onParentPressStart}
-              onMouseUp={onParentPressEnd}
-              onMouseLeave={onParentPressEnd}
-              onTouchStart={onParentPressStart}
-              onTouchEnd={onParentPressEnd}
-              className="w-9 h-9 rounded-full bg-slate-100 border flex items-center justify-center text-slate-500 text-xs"
-              title="Hold for Parent Settings"
-              aria-label="Parent settings (hold)"
-            >
-              ⚙️
-            </button>
-          </div>
+          )}
+          <button
+            className="icon-button fullscreen-button"
+            aria-label="Toggle full screen"
+            title="Full screen"
+            onClick={() => {
+              if (document.fullscreenElement)
+                document.exitFullscreen?.().catch(() => {});
+              else
+                document.documentElement.requestFullscreen?.().catch(() => {});
+            }}
+          >
+            ⛶
+          </button>
+          <button
+            className="icon-button"
+            aria-label="Parent settings: hold or press Enter"
+            title="Hold for parent settings"
+            onPointerDown={startHold}
+            onPointerUp={endHold}
+            onPointerLeave={endHold}
+            onPointerCancel={endHold}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") setShowParent(true);
+            }}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            ⚙
+          </button>
         </div>
-
-        {/* mobile fuel */}
-        <div className="sm:hidden px-4 pb-3">
-          <FuelGauge current={progress.currentFuel} required={progress.settings.flightFuelRequired} total={progress.totalFuel} />
-        </div>
-
-        {/* nav */}
-        {view !== "reading" && (
-          <nav className="max-w-5xl mx-auto px-4 pb-3 flex gap-2">
-            {[
-              ["library", "📚 Library"],
-              ["hangar", "🛩️ Hangar"],
-              ["map", "🗺️ Map"],
-            ].map(([k, label]) => (
-              <button
-                key={k}
-                onClick={() => setView(k)}
-                className={`flex-1 sm:flex-none px-5 py-2.5 rounded-full font-black text-sm border-2 transition ${view===k ? "bg-sky-500 text-white border-sky-600 shadow" : "bg-white text-slate-700 border-slate-200"}`}
-              >
-                {label}
-              </button>
-            ))}
-            <button
-              onClick={() => {
-                if (progress.currentFuel >= progress.settings.flightFuelRequired) {
-                  // Joy flight level bumps with harder stories completed
-                  const joyLevel = progress.storiesCompleted.some((id) => {
-                    const s = storiesData.find((x) => x.id === id);
-                    return s && s.level === 3;
-                  }) ? 2 : progress.storiesCompleted.length >= 3 ? 2 : 1;
-                  setJoyFlight({ level: joyLevel, duration: getFlightDurationSeconds(joyLevel) });
-                } else {
-                  setToast(`Need ${progress.settings.flightFuelRequired - progress.currentFuel} more fuel to fly`);
-                }
-              }}
-              className={`px-5 py-2.5 rounded-full font-black text-sm border-2 ${progress.currentFuel >= progress.settings.flightFuelRequired ? "bg-emerald-500 text-white border-emerald-600 animate-pulse" : "bg-white text-slate-400 border-slate-200"}`}
-            >
-              ✈️ FLY
-            </button>
-          </nav>
-        )}
       </header>
-
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      {!playing && (
+        <nav className="main-nav" aria-label="Main menu">
+          {[
+            ["library", "📚", "Read & play"],
+            ["hangar", "🛩️", "My planes"],
+            ["map", "🌍", "My places"],
+          ].map(([key, emoji, label]) => (
+            <button
+              key={key}
+              aria-current={view === key ? "page" : undefined}
+              onClick={() => {
+                setView(key);
+                setCelebration(null);
+              }}
+            >
+              <span aria-hidden="true">{emoji}</span>
+              {label}
+            </button>
+          ))}
+          <div
+            className="nav-reward"
+            aria-label={`${progress.starsCollected} stars collected`}
+          >
+            ⭐ {progress.starsCollected}
+            <span>stars</span>
+          </div>
+        </nav>
+      )}
+      <main className={`app-main ${playing ? "play-main" : ""}`}>
         {joyFlight ? (
-          <div className="max-w-3xl mx-auto">
-            <button onClick={() => setJoyFlight(null)} className="mb-4 text-sky-700 font-bold bg-white px-4 py-2 rounded-full shadow border">← Back</button>
+          <div className="flight-session">
+            <button
+              className="quiet-button"
+              onClick={() => setJoyFlight(false)}
+            >
+              ⌂ Home
+            </button>
             <FlightView
-              level={joyFlight.level}
-              durationSeconds={joyFlight.duration}
-              fuelEarned={progress.settings.flightFuelRequired}
+              level={1}
+              durationSeconds={getFlightDurationSeconds(1)}
               skin={progress.settings.hangarSkin}
+              soundEnabled={progress.settings.soundEnabled}
               onDone={({ ringsCollected }) => {
-                setProgress((p) => consumeFuelForFlight(p, ringsCollected));
-                setToast(`✈️ Joy flight! ${ringsCollected} rings collected!`);
-                setJoyFlight(null);
+                finishFlight(ringsCollected);
+                setJoyFlight(false);
               }}
             />
-            <p className="text-center text-xs text-slate-500 mt-2">Joy flight • Level {joyFlight.level} • {joyFlight.duration}s — keep reading to unlock longer flights!</p>
           </div>
         ) : (
           <>
-            {view === "library" && !activeStory && (
-              <Library stories={stories} progress={progress} onSelect={(s) => { setActiveStory(s); setView("reading"); }} settings={progress.settings} onSettings={handleSettingsUpdate} />
-            )}
-
-            {view === "reading" && activeStory && (
-              <StoryReader
-                story={activeStory}
-                progress={progressWithFlight}
+            {view === "library" && (
+              <Library
+                stories={stories}
+                progress={progress}
+                onSelect={selectStory}
                 settings={progress.settings}
-                onSentenceSuccess={handleSentenceSuccess}
-                onStoryComplete={handleStoryComplete}
-                onExit={() => { setActiveStory(null); setView("library"); }}
+                onSettings={updateSettings}
+                pilot={pilot}
+                celebration={celebration}
+                onFly={() => setJoyFlight(true)}
               />
             )}
-
+            {view === "reading" && activeStory && (
+              <StoryReader
+                key={`${pilotId}:${activeStory.id}`}
+                story={activeStory}
+                progress={progress}
+                settings={progress.settings}
+                onSettings={updateSettings}
+                onSentenceSuccess={(result) =>
+                  setProgress((p) => addSentenceResult(p, result))
+                }
+                onPosition={(idx) =>
+                  setProgress((p) => ({
+                    ...p,
+                    storyPositions: {
+                      ...p.storyPositions,
+                      [activeStory.id]: idx,
+                    },
+                  }))
+                }
+                onFlightDone={finishFlight}
+                onStoryComplete={finishStory}
+                onExit={() => {
+                  setActiveStory(null);
+                  setView("library");
+                }}
+              />
+            )}
             {view === "hangar" && (
-              <Hangar progress={progress} onSelectSkin={handleSelectSkin} />
+              <Hangar
+                progress={progress}
+                onSelectSkin={(skin) => updateSettings({ hangarSkin: skin })}
+              />
             )}
-
-            {view === "map" && (
-              <MapView progress={progress} />
-            )}
+            {view === "map" && <MapView progress={progress} />}
           </>
         )}
       </main>
-
-      <footer className="text-center text-[11px] text-slate-400 py-8">
-        Reading Racer • Offline-capable • No ads • No tracking • Hold ⚙️ 1 sec for Parent Dashboard
-      </footer>
-
+      {!playing && (
+        <footer className="app-footer">
+          Made for curious little pilots · Progress saved on this laptop
+          {canFly && " · Your plane is ready!"}
+        </footer>
+      )}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-xl font-bold text-sm z-40">
+        <div className="toast" role="status">
           {toast}
         </div>
       )}
-
       {showParent && (
         <ParentDashboard
           progress={progress}
           stories={stories}
-          onUpdateSettings={handleSettingsUpdate}
-          onClearProgress={handleClearProgress}
+          onUpdateSettings={updateSettings}
+          onClearProgress={() => {
+            if (
+              !confirm(`Clear ${pilot.name}'s progress? This cannot be undone.`)
+            )
+              return;
+            clearProgress(pilotId);
+            setProgress(loadProgress(pilotId));
+            setShowParent(false);
+          }}
           onClose={() => setShowParent(false)}
         />
       )}
