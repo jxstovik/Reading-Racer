@@ -144,7 +144,10 @@ export default function App() {
             onPointerLeave={endHold}
             onPointerCancel={endHold}
             onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") setShowParent(true);
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setShowParent(true);
+              }
             }}
             onContextMenu={(e) => e.preventDefault()}
           >
